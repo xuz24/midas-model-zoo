@@ -137,6 +137,44 @@ p {
   flex-shrink:0;
   white-space:nowrap
 }
+.header-account {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  justify-content:flex-end;
+  flex-shrink:0;
+  margin-left:auto;
+  max-width:280px;
+  font-size:13px;
+  text-align:right
+}
+.account-email {
+  min-width:0;
+  overflow-wrap:anywhere
+}
+.logout-form {
+  flex-shrink:0;
+  margin:0
+}
+.logout-button {
+  padding:8px 12px;
+  border:1px solid #ffffff66;
+  border-radius:6px;
+  background:transparent;
+  color:inherit;
+  font:inherit;
+  white-space:nowrap;
+  cursor:pointer
+}
+.logout-button:hover {
+  background:#ffffff1a
+}
+.account-label {
+  display:block;
+  margin-bottom:4px;
+  font-size:11px;
+  color:#ffffffb3
+}
 .navigation a[aria-current] {
   position:relative
 }
@@ -796,6 +834,13 @@ h2 {
 }
 
 @media(max-width:1050px) {
+  .nav-bar {
+  flex-wrap:wrap
+}
+  .nav-bar > .navigation {
+  order:3;
+  flex-basis:100%
+}
   .container {
   width:calc(100% - 48px)
 }
@@ -928,6 +973,9 @@ h2 {
 }
 
 @media(max-width:500px) {
+  .header-account {
+  max-width:100%
+}
   .container {
   width:calc(100% - 36px)
 }

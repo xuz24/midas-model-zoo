@@ -1,11 +1,21 @@
+import os
 import json
+import hmac
 from pathlib import Path
 
-from flask import Flask, abort, redirect, render_template, url_for
+from flask import Flask, abort, redirect, render_template, url_for, request, session
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+from dotenv import load_dotenv
 
 from .records import KINDS, load_records, research_entries, record_details
 from .models import get_models
 from .catalogs import get_datasets, get_papers, get_software
+from .auth import auth_bp
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+
+load_dotenv(BASE_DIR / ".env")
 
 frontend = Path(__file__).resolve().parents[2] / "frontend"
 app = Flask(
@@ -14,6 +24,11 @@ app = Flask(
     static_folder=str(frontend / "static"),
 )
 
+app.config["SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]
+app.config["GOOGLE_CLIENT_ID"] = os.environ["GOOGLE_CLIENT_ID"]
+
+app.register_blueprint(auth_bp)
+
 
 @app.context_processor
 def frontend_assets():
@@ -21,8 +36,8 @@ def frontend_assets():
     if not manifest_path.exists():
         raise RuntimeError("Frontend assets are missing. Run: cd frontend && npm install && npm run build")
     manifest = json.loads(manifest_path.read_text())
-    return {"assets": manifest["src/main.tsx"]}
-
+    return {"assets": manifest["src/main.tsx"],
+            "google_client_id": app.config["GOOGLE_CLIENT_ID"]}
 
 @app.get("/")
 def home():
@@ -86,3 +101,4 @@ def coming_soon(feature):
         abort(404)
     title, description = features[feature]
     return render_template("placeholder.html", title=title, description=description)
+
