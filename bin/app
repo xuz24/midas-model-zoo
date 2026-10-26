@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RUN_DIR="$ROOT/.run"
+PID_FILE="$RUN_DIR/app.pid"
+LOG_FILE="$RUN_DIR/app.log"
+PYTHON="$ROOT/.venv/bin/python"
+
+running() {
+  [[ -f "$PID_FILE" ]] || return 1
+  PID="$(cat "$PID_FILE")"
+  [[ "$PID" =~ ^[0-9]+$ ]] || return 1
+  kill -0 "$PID" 2>/dev/null || return 1
+  # A stale PID file must never cause us to stop an unrelated process.
+  local command
+  command="$(ps -p "$PID" -o command=)" || return 1
+  [[ "$command" == *"-m flask --app $ROOT/backend/app run"* ]]
+}
+
+case "${1:-}" in
+  start)
+    if running; then
+      echo "App is already running (PID $PID)."
+      exit 0
+    fi
+    if [[ ! -x "$PYTHON" ]]; then
+      echo "Missing .venv. Follow the setup instructions in README.md first." >&2
+      exit 1
+    fi
+    "$PYTHON" -c 'import flask, yaml'
+    cd "$ROOT"
+    npm --prefix frontend run build
+    mkdir -p "$RUN_DIR"
+    # Disable the reloader so the recorded PID owns the server directly.
+    nohup "$PYTHON" -m flask --app "$ROOT/backend/app" run \
+      --no-debugger --no-reload --host 127.0.0.1 --port 5001 \
+      > "$LOG_FILE" 2>&1 < /dev/null &
+    PID=$!
+    echo "$PID" > "$PID_FILE"
+    sleep 1
+    if ! running; then
+      rm -f "$PID_FILE"
+      echo "App failed to start. See $LOG_FILE:" >&2
+      cat "$LOG_FILE" >&2
+      exit 1
+    fi
+    echo "App started at http://127.0.0.1:5001 (PID $PID)."
+    echo "Log: $LOG_FILE"
+    ;;
+  stop)
+    if ! running; then
+      rm -f "$PID_FILE"
+      echo "App is not running."
+      exit 0
+    fi
+    kill "$PID"
+    for ((attempt = 0; attempt < 50; attempt++)); do
+      if ! running; then
+        rm -f "$PID_FILE"
+        echo "App stopped."
+        exit 0
+      fi
+      sleep 0.1
+    done
+    echo "App has not stopped yet (PID $PID). See $LOG_FILE." >&2
+    exit 1
+    ;;
+  status)
+    if running; then
+      echo "App is running at http://127.0.0.1:5001 (PID $PID)."
+    else
+      echo "App is not running."
+      exit 1
+    fi
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status}" >&2
+    exit 2
+    ;;
+esac

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% macro field(kind, name, label, placeholder='', options=[]) %}
+<div>
+  <label for="{{ kind }}-{{ name }}">{{ label }}</label>
+  {% if options %}
+  <select id="{{ kind }}-{{ name }}" name="{{ name }}">
+    <option value="">Select {{ label | lower }}</option>
+    {% for option in options %}<option value="{{ option }}">{{ option }}</option>{% endfor %}
+  </select>
+  {% else %}
+  <input id="{{ kind }}-{{ name }}" name="{{ name }}" type="{{ 'url' if name.endswith('_url') else 'text' }}" placeholder="{{ placeholder }}">
+  {% endif %}
+</div>
+{% endmacro %}
+{% block content %}
+<section class="catalog-hero">
+  <div class="container">
+    <p class="eyebrow">SHARE YOUR WORK</p>
+    <div class="catalog-heading"><div><h1>Submit research<span class="maize-dot">.</span></h1>
+      <p>Help the Michigan research community discover your models, datasets, papers, and software.</p>
+    </div></div>
+  </div>
+</section>
+<div class="container submission-layout">
+  <section class="submission-fields" aria-label="Research submission preview">
+    <p class="catalog-notice" id="submission-notice"><strong>Page preview</strong> Information entered here is not saved or sent. The Submit research button has no action yet.</p>
+    <fieldset>
+      <legend><span class="submission-step">01</span> Research details</legend>
+      <label for="research-kind">Research type</label>
+      <select id="research-kind" name="kind" aria-controls="research-specifics">
+        <option value="">Select a type</option>
+        <option value="models">Model</option>
+        <option value="datasets">Dataset</option>
+        <option value="papers">Paper</option>
+        <option value="software">Software</option>
+      </select>
+      <label for="research-title">Title or name</label>
+      <input id="research-title" name="title" type="text" maxlength="200" placeholder="The name of your research">
+      <label for="research-summary">Short summary</label>
+      <p class="submission-help" id="summary-help">Describe what your work does and who it could help in one or two sentences.</p>
+      <textarea id="research-summary" name="summary" rows="5" maxlength="2000" aria-describedby="summary-help"></textarea>
+      <label for="research-url">Research link</label>
+      <p class="submission-help" id="url-help">Link to the publication, repository, model, or dataset.</p>
+      <input id="research-url" name="source_url" type="url" placeholder="https://" aria-describedby="url-help">
+      <label for="research-tags">Keywords <span>(optional)</span></label>
+      <input id="research-tags" name="tags" type="text" placeholder="e.g. climate, machine learning, public health">
+    </fieldset>
+    <fieldset id="research-specifics">
+      <legend><span class="submission-step">02</span> Research specifications</legend>
+      <p class="submission-help" id="research-type-hint" hidden>Select a research type above to see its fields.</p>
+      <div data-research-kind="models">
+        <h3>Model specifications</h3>
+        <div class="submission-grid">
+          {{ field('model', 'task', 'Task', options=['text-classification', 'text-generation', 'image-classification', 'object-detection', 'speech-recognition', 'translation', 'other']) }}
+          {{ field('model', 'framework', 'Framework', options=['pytorch', 'tensorflow', 'jax', 'onnx', 'other']) }}
+          {{ field('model', 'modality', 'Modality', options=['text', 'image', 'audio', 'video', 'tabular', 'multimodal']) }}
+          {{ field('model', 'license', 'License', 'e.g. Apache-2.0') }}
+        </div>
+        {{ field('model', 'base_model', 'Base model (optional)', 'Name or catalog ID of the original model') }}
+        {{ field('model', 'hub_url', 'Model hub link (optional)', 'https://huggingface.co/…') }}
+      </div>
+      <div data-research-kind="datasets">
+        <h3>Dataset specifications</h3>
+        <div class="submission-grid">
+          {{ field('dataset', 'modality', 'Modality', options=['text', 'image', 'audio', 'video', 'tabular', 'multimodal']) }}
+          {{ field('dataset', 'task', 'Task (optional)', options=['pretraining', 'fine-tuning', 'evaluation', 'benchmark', 'other']) }}
+          {{ field('dataset', 'license', 'License', 'e.g. CC-BY-4.0') }}
+          {{ field('dataset', 'size', 'Size (optional)', 'e.g. 6 GB, 10,000 observations') }}
+        </div>
+        {{ field('dataset', 'languages', 'Languages (optional)', 'e.g. en, es') }}
+        <label for="dataset-limitations">Known limitations (optional)</label>
+        <textarea id="dataset-limitations" name="known_limitations" rows="4" placeholder="Describe coverage gaps, limitations, or recommended uses."></textarea>
+      </div>
+      <div data-research-kind="papers">
+        <h3>Publication details</h3>
+        <div class="submission-grid">
+          <div><label for="paper-year">Publication year</label><input id="paper-year" name="year" type="number" min="1000" max="9999" step="1" placeholder="e.g. 2026"></div>
+          {{ field('paper', 'venue', 'Venue (optional)', 'Journal or conference name') }}
+        </div>
+        {{ field('paper', 'doi', 'DOI', '10.1234/example') }}
+        {{ field('paper', 'arxiv_url', 'arXiv link', 'https://arxiv.org/abs/…') }}
+        <p class="submission-help submission-note">Include a DOI or an arXiv link so readers can find the publication.</p>
+      </div>
+      <div data-research-kind="software">
+        <h3>Software specifications</h3>
+        <div class="submission-grid">
+          {{ field('software', 'language', 'Language', options=['python', 'r', 'julia', 'other']) }}
+          {{ field('software', 'license', 'License', 'e.g. MIT') }}
+          {{ field('software', 'registry', 'Registry (optional)', options=['pypi', 'cran', 'conda', 'other']) }}
+          {{ field('software', 'install', 'Install command (optional)', 'e.g. pip install your-package') }}
+        </div>
+        {{ field('software', 'package_url', 'Package link (optional)', 'https://pypi.org/project/…') }}
+        {{ field('software', 'docs_url', 'Documentation link (optional)', 'https://') }}
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend><span class="submission-step">03</span> People behind the research</legend>
+      <label for="research-authors">Authors and contributors</label>
+      <p class="submission-help" id="authors-help">List the people who contributed to this work, separated by commas.</p>
+      <input id="research-authors" name="authors" type="text" aria-describedby="authors-help">
+      <label for="research-affiliation">Lab, department, or institution <span>(optional)</span></label>
+      <input id="research-affiliation" name="institution" type="text" placeholder="Your research affiliation">
+    </fieldset>
+    <div class="submission-actions">
+      <button class="button button-primary" type="button" aria-describedby="submission-notice">Submit research <span aria-hidden="true">→</span></button>
+      <a href="{{ url_for('home') }}#explore">Back to research</a>
+    </div>
+  </section>
+  <aside class="submission-guide" aria-labelledby="submission-guide-title">
+    <p class="eyebrow">BEFORE YOU BEGIN</p>
+    <h2 id="submission-guide-title">Make your work discoverable.</h2>
+    <p>A clear description and a reliable link help other researchers understand and build on your work.</p>
+    <h3>What can you share?</h3>
+    <ul>
+      <li><strong>Models</strong> — trained models and their applications.</li>
+      <li><strong>Datasets</strong> — collections that support research.</li>
+      <li><strong>Papers</strong> — publications and preprints.</li>
+      <li><strong>Software</strong> — research tools, packages, and libraries.</li>
+    </ul>
+    <h3>Give readers a starting point</h3>
+    <p>Use a descriptive title, credit your collaborators, and include a stable link where people can learn more.</p>
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+id: bert-base-uncased
+name: BERT Base (Uncased)
+summary: A general-purpose English language model pretrained with masked language modeling.
+task: text-classification
+modality: text
+framework: pytorch
+license: apache-2.0
+authors: [Jane Doe, John Smith]
+institution: University of Michigan
+base_model: null
+datasets: [wikipedia-2020]
+papers: [devlin-2018-bert]
+source_url: https://github.com/example/bert-base-uncased
+hub_url: https://huggingface.co/bert-base-uncased
+last_updated: 2026-10-14

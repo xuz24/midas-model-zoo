@@ -1,0 +1,13 @@
+id: scikit-learn
+name: scikit-learn
+summary: Machine learning library for Python with tools for classification, regression, clustering, and model evaluation.
+language: python
+license: bsd-3-clause
+registry: pypi
+package_url: https://pypi.org/project/scikit-learn/
+source_url: https://github.com/scikit-learn/scikit-learn
+install: pip install scikit-learn
+docs_url: https://scikit-learn.org/stable/
+papers: [pedregosa-2011-sklearn]
+tags: [machine-learning, python]
+last_updated: 2026-10-21

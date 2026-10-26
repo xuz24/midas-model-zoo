@@ -1,0 +1,14 @@
+id: color-prediction-model
+name: color-prediction-model
+summary: predicts the color (among 8 colors) of 1 shape (circle, rectangle, diamond, triangle) in a 224 x 224 x 3 image.
+task: Image classification
+modality: images
+framework: pytorch
+license: apache-2.0
+authors: [Seth Temple]
+institution: University of Michigan
+base_model: null
+datasets: [https://huggingface.co/datasets/sdtemple/colored-shapes]
+source_url: https://huggingface.co/sdtemple/color-prediction-model
+hub_url: https://huggingface.co/sdtemple/color-prediction-model
+last_updated: 2026-01-24

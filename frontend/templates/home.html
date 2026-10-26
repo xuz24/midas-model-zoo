@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <h1>Discover Research<br>at <span>Michigan</span><span class="maize-dot">.</span></h1>
+      <p class="hero-description">Big ideas deserve to be found. Connect with University of Michigan researchers and explore the projects, models, datasets, and publications moving knowledge forward.</p>
+      <div class="hero-actions"><a class="button button-primary" href="#explore">Explore Research <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="{{ url_for('submit_research') }}">Share Your Research <span aria-hidden="true">→</span></a></div>
+    </div>
+    <div id="research-carousel">
+      <noscript><p>Browse the latest research in the <a href="#explore">research catalog</a>.</p></noscript>
+    </div>
+  </div>
+</section>
+<section class="container discovery" id="explore" aria-label="Research discovery">
+  <div id="research-explorer"><p>Loading research…</p></div>
+  <script id="research-data" type="application/json">{{ research | tojson }}</script>
+  <noscript><p>Enable JavaScript to search and filter research records.</p></noscript>
+</section>
+<section class="container" id="about">
+  <div class="share-panel">
+    <div><p class="eyebrow">KNOWLEDGE GROWS WHEN IT'S SHARED</p><h2>Your research could spark<br>someone’s next big idea.</h2><p>A shared space for the Michigan research community to make work discoverable, connect across disciplines, and build on each other’s ideas.</p></div>
+    <div class="share-action"><a class="button button-maize" href="{{ url_for('submit_research') }}">Submit Your Research <span aria-hidden="true">↗</span></a><span>Submission workflow coming soon</span></div>
+  </div>
+</section>
+{% endblock %}

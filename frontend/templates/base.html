@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Discover and share research, models, datasets, and software across the University of Michigan research community. An independent platform prototype.">
+  <title>{{ title }}</title>
+  {% for css in assets.get('css', []) %}<link rel="stylesheet" href="{{ url_for('static', filename='dist/' ~ css) }}">{% endfor %}
+  <script type="module" src="{{ url_for('static', filename='dist/' ~ assets.file) }}"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container nav-bar">
+      <a class="brand" href="{{ url_for('home') }}" aria-label="Michigan Research Hub home"><img class="header-logo" src="{{ url_for('static', filename='images/MIDASsignature-acronym-white.png') }}" alt="University of Michigan MIDAS" width="944" height="147"><span class="hub-name">Model Zoo</span></a>
+      <nav class="navigation" aria-label="Main navigation">
+        <a href="{{ url_for('home') }}" {% if request.endpoint == 'home' %}aria-current="page"{% endif %}>Home</a>
+        <a href="{{ url_for('models') }}" {% if request.endpoint == 'models' %}aria-current="page"{% endif %}>Models</a>
+        <a href="{{ url_for('datasets') }}" {% if request.endpoint == 'datasets' %}aria-current="page"{% endif %}>Datasets</a>
+        <a href="{{ url_for('papers') }}" {% if request.endpoint == 'papers' %}aria-current="page"{% endif %}>Papers</a>
+        <a href="{{ url_for('software') }}" {% if request.endpoint == 'software' %}aria-current="page"{% endif %}>Software</a>
+        <a href="{{ url_for('home') }}#explore">Explore Research</a>
+        <a href="{{ url_for('submit_research') }}" {% if request.endpoint == 'submit_research' %}aria-current="page"{% endif %}>Submit Research</a>
+        <a href="{{ url_for('home') }}#about">About</a>
+        <a class="button login-button" href="{{ url_for('coming_soon', feature='login') }}">Login <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">{% block content %}{% endblock %}</main>
+  <footer class="site-footer container">
+    <div><a class="footer-brand" href="{{ url_for('home') }}">MIDAS Model Zoo<span class="maize-dot">.</span></a></div>
+    <nav aria-label="Footer navigation">
+      <a href="{{ url_for('home') }}#about">About</a>
+      <a href="{{ url_for('coming_soon', feature='github') }}">GitHub ↗</a>
+      <a href="{{ url_for('coming_soon', feature='contact') }}">Contact</a>
+      <a href="{{ url_for('coming_soon', feature='docs') }}">Documentation</a>
+    </nav>
+  </footer>
+</body>
+</html>

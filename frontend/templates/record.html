@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="catalog-hero">
+  <div class="container">
+    <p class="eyebrow"><a href="{{ url_for(kind) }}">← BACK TO {{ kind | upper }}</a></p>
+    <div class="catalog-heading"><div><h1>{{ title }}</h1><p>{{ record.summary }}</p></div></div>
+  </div>
+</section>
+<section class="container record-details">
+  <h2>Record details</h2>
+  <p class="search-help">Metadata as provided in the catalog record.</p>
+  <dl>{% for field in fields %}
+    <div class="record-field"><dt>{{ field.label }}</dt><dd>{% for value in field['values'] %}
+      <div>{% if value.url %}<a href="{{ value.url }}">{{ value.label }} ↗</a>{% else %}{{ value.label }}{% endif %}</div>
+    {% else %}Not specified{% endfor %}</dd></div>
+  {% endfor %}</dl>
+</section>
+{% endblock %}

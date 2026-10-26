@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="catalog-hero">
+  <div class="container">
+    <p class="eyebrow">THE MICHIGAN RESEARCH COMMUNITY</p>
+    <div class="catalog-heading">
+      <div><h1>{{ catalog_title }}<span class="maize-dot">.</span></h1><p>{{ introduction }}</p></div>
+      <a class="button button-primary" href="{{ url_for('submit_research') }}">{{ share_label | default("Share a " ~ singular) }} <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+<section class="container model-catalog" aria-label="{{ catalog_title }} catalog">
+  <p class="catalog-notice">Browse the {{ kind }} catalog. Metadata is supplied by the record contributors.</p>
+  <div id="catalog-explorer" data-kind="{{ kind }}"><p>Loading {{ kind }} catalog…</p></div>
+  <script id="catalog-data" type="application/json">{{ entries | tojson }}</script>
+  <noscript>
+    <p>Enable JavaScript to search, filter, and sort the catalog.</p>
+    <ul>{% for entry in entries %}<li><a href="{{ entry.detail_url }}">{{ entry.title }}</a> — {{ entry.owner }} · {{ entry.category }}<p>{{ entry.description }}</p></li>{% else %}<li>No {{ kind }} available yet.</li>{% endfor %}</ul>
+  </noscript>
+</section>
+{% endblock %}

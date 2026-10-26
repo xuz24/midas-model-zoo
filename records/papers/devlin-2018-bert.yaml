@@ -1,0 +1,12 @@
+id: devlin-2018-bert
+title: "BERT: Pre-training of Deep Bidirectional Transformers"
+authors: [Jacob Devlin, Ming-Wei Chang]
+year: 2018
+venue: NAACL 2019
+doi: 10.18653/v1/N19-1423
+arxiv_url: https://arxiv.org/abs/1810.04805
+summary: Introduces a pretraining method for language models that reads text in both directions at once.
+models: [bert-base-uncased]
+datasets: [wikipedia-2020]
+tags: [nlp, pretraining]
+last_updated: 2026-10-14

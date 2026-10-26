@@ -1,0 +1,11 @@
+id: ai-validated-plant-observations-from-social-media
+name: AI validated plant observations from social media
+summary: Plant Image Classification
+modality: images
+license: cc-by-sa-3.0
+task: classification
+size: 6 GB
+collection_date: 2011-08-01
+languages: [en]
+source_url: https://zenodo.org/records/3514685
+last_updated: 2019-10-21

@@ -1,0 +1,12 @@
+id: wikipedia-2020
+name: Wikipedia (2020 dump)
+summary: English Wikipedia article text from a 2020 snapshot.
+modality: text
+license: cc-by-sa-3.0
+task: pretraining
+size: 6 GB
+collection_date: 2020-08-01
+languages: [en]
+known_limitations: Reflects the demographics of contributors and may underrepresent some topics.
+source_url: https://dumps.wikimedia.org/
+last_updated: 2026-10-14

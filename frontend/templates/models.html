@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="catalog-hero">
+  <div class="container">
+    <p class="eyebrow">THE MICHIGAN RESEARCH COMMUNITY</p>
+    <div class="catalog-heading">
+      <div><h1>Models<span class="maize-dot">.</span></h1><p>Discover models across disciplines. Find a starting point for your next research question.</p></div>
+      <a class="button button-primary" href="{{ url_for('submit_research') }}">Share a model <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+<section class="container model-catalog" aria-label="Model catalog">
+  <p class="catalog-notice">Browse the model catalog. Metadata is supplied by the record contributors.</p>
+  <div id="model-explorer"><p>Loading model catalog…</p></div>
+  <script id="model-data" type="application/json">{{ models | tojson }}</script>
+  <noscript>
+    <p>Enable JavaScript to search, filter, and sort the catalog.</p>
+    <ul>{% for model in models %}<li><a href="{{ model.detail_url }}">{{ model.name }}</a> — {{ model.owner }} · {{ model.task }}<p>{{ model.description }}</p></li>{% else %}<li>No models available yet.</li>{% endfor %}</ul>
+  </noscript>
+</section>
+{% endblock %}
