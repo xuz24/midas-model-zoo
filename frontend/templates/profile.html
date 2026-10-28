@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="catalog-hero">
+  <div class="container">
+    <p class="eyebrow">MY PROFILE</p>
+    <div class="catalog-heading"><div><h1>Your research identity<span class="maize-dot">.</span></h1><p>A place for your background, interests, and ideas.</p></div>
+      <a class="button button-primary" href="{{ url_for('users.setup_profile', edit='1') }}">Edit profile <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+<div class="container profile-content">
+  {% for message in get_flashed_messages(category_filter=['success']) %}<p class="profile-success" role="status">{{ message }}</p>{% endfor %}
+  <div class="profile-layout">
+    <aside class="profile-sidebar profile-identity">
+      <div class="profile-avatar" aria-hidden="true">{{ (user.name or 'R')[:1] | upper }}</div>
+      <h2>{{ user.name or 'Researcher' }}</h2>
+      <p>@{{ user.username }}</p>
+      <p class="profile-role">{{ user.role or 'Research community member' }}</p>
+      {% if user.institution %}<p>{{ user.institution }}</p>{% endif %}
+      <div class="profile-account"><span class="eyebrow">ACCOUNT EMAIL</span><p>{{ user.email or 'No email available' }}</p></div>
+      <p><a class="profile-text-link" href="{{ url_for('users.user', username=user.username) }}">View public profile →</a></p>
+      {% if user.created_at %}<p class="profile-hint">Member since {{ user.created_at.strftime('%B %Y') }}</p>{% endif %}
+    </aside>
+    <div class="profile-details">
+      <section class="profile-card"><p class="eyebrow">INTRODUCTION</p><h2>About me</h2>
+        {% if user.bio %}<p class="profile-bio">{{ user.bio }}</p>{% else %}<p class="profile-empty">Every research journey has a story. Add a short bio to share yours.</p><a class="profile-text-link" href="{{ url_for('users.setup_profile', edit='1') }}#profile-bio">Add an introduction →</a>{% endif %}
+      </section>
+      <section class="profile-card"><p class="eyebrow">AREAS OF EXPLORATION</p><h2>Research interests</h2>
+        {% if interests %}<ul class="profile-tags">{% for interest in interests %}<li>{{ interest }}</li>{% endfor %}</ul>{% else %}<p class="profile-empty">What are you curious about? Add the topics that shape your work.</p><a class="profile-text-link" href="{{ url_for('users.setup_profile', edit='1') }}#profile-research_interests">Add research interests →</a>{% endif %}
+      </section>
+      <div class="profile-explore"><div><h2>Find your next connection.</h2><p>Explore work from across the research community.</p></div><a class="button button-secondary" href="{{ url_for('home') }}#explore">Explore research <span aria-hidden="true">→</span></a></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

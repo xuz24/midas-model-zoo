@@ -4,6 +4,9 @@ from flask import Blueprint, request, abort, session, redirect, url_for, current
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
+from .database import db
+from .db_models import User
+
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
@@ -32,9 +35,21 @@ def google_login():
         abort(401)
 
     session.clear()
-    session["user_id"] = user["sub"]
-    session["email"] = user.get("email")
 
+    db_user = db.session.execute(
+        db.select(User).filter_by(google_sub=user["sub"])
+    ).scalar_one_or_none()
+    
+    if db_user is None:
+        session["pending_user"] = {
+            "google_sub": user["sub"],
+            "email": user.get("email"),
+            "name": user.get("name"),
+        }
+        return redirect(url_for("users.setup_profile"))
+
+    session["username"] = db_user.username
+    session["email"] = db_user.email
     return redirect(url_for("home"))
 
 

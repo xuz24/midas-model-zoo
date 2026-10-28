@@ -1,92 +1,53 @@
 {% extends "base.html" %}
-
+{% macro field(name, label, placeholder='', limit=255, autocomplete='off') %}
+<div class="profile-field">
+  <label for="profile-{{ name }}">{{ label }} {% if name not in ['name', 'username'] %}<span>(optional)</span>{% else %}<span>(required)</span>{% endif %}</label>
+  <input id="profile-{{ name }}" name="{{ name }}" value="{{ fields[name] }}" placeholder="{{ placeholder }}" maxlength="{{ limit }}" autocomplete="{{ autocomplete }}" {% if name in ['name', 'username'] %}required{% endif %} {% if errors.get(name) %}aria-invalid="true" aria-describedby="{{ name }}-error"{% elif name == 'username' %}aria-describedby="username-help"{% elif name == 'research_interests' %}aria-describedby="interests-help"{% endif %}>
+  {% if errors.get(name) %}<p class="profile-error" id="{{ name }}-error">{{ errors[name] }}</p>{% endif %}
+</div>
+{% endmacro %}
 {% block content %}
 <section class="catalog-hero">
   <div class="container">
-    <p class="eyebrow">YOUR RESEARCH PROFILE</p>
-    <div class="catalog-heading">
-      <div>
-        <h1>Set up your profile<span class="maize-dot">.</span></h1>
-        <p>Tell the Michigan research community a little about yourself.</p>
-      </div>
-    </div>
+    <p class="eyebrow">YOUR SPACE IN THE RESEARCH COMMUNITY</p>
+    <div class="catalog-heading"><div>
+      <h1>{{ 'Edit your profile' if editing else 'Make yourself at home' }}<span class="maize-dot">.</span></h1>
+      <p>Introduce yourself and the ideas you’re exploring.</p>
+    </div></div>
   </div>
 </section>
-
-<div class="container" style="max-width: 760px; padding-block: 48px 72px;">
-  <form action="{{ url_for('users.setup_profile') }}" method="post">
+<div class="container profile-layout">
+  <aside class="profile-sidebar">
+    <div class="profile-avatar" aria-hidden="true">{{ (user.name or 'R')[:1] | upper }}</div>
+    <h2>A little about you.</h2>
+    <p>Your research starts with your perspective. Add your background, interests, and a short introduction.</p>
+    <div class="profile-account"><span class="eyebrow">CONNECTED ACCOUNT</span><p>{{ user.email or 'Google account' }}</p><span>Signed in with Google</span></div>
+    <p class="profile-hint">Your name and a unique username are required. You can come back and edit these details anytime.</p>
+  </aside>
+  <form class="submission-fields profile-card" action="{{ url_for('users.setup_profile', edit='1') if editing else url_for('users.setup_profile') }}" method="post">
+    {% if errors %}<p class="profile-error-summary" role="alert">Please check the highlighted fields below.</p>{% endif %}
     <fieldset>
-      <legend>Profile information</legend>
-
-      <div style="display: grid; gap: 20px;">
-        <div>
-          <label for="profile-name">Name <span aria-hidden="true">*</span></label>
-          <input
-            id="profile-name"
-            name="name"
-            type="text"
-            value="{{ user.name or '' }}"
-            autocomplete="name"
-            maxlength="255"
-            required
-            autofocus
-          >
-        </div>
-
-        <div>
-          <label for="profile-institution">Institution</label>
-          <input
-            id="profile-institution"
-            name="institution"
-            type="text"
-            value="{{ user.institution or '' }}"
-            autocomplete="organization"
-            maxlength="255"
-            placeholder="e.g. University of Michigan"
-          >
-        </div>
-
-        <div>
-          <label for="profile-role">Role</label>
-          <input
-            id="profile-role"
-            name="role"
-            type="text"
-            value="{{ user.role or '' }}"
-            maxlength="255"
-            placeholder="e.g. PhD student, faculty member, researcher"
-          >
-        </div>
-
-        <div>
-          <label for="profile-interests">Research interests</label>
-          <input
-            id="profile-interests"
-            name="research_interests"
-            type="text"
-            value="{{ user.research_interests or '' }}"
-            maxlength="1000"
-            placeholder="e.g. machine learning, climate science"
-          >
-          <p class="submission-help">Separate multiple interests with commas.</p>
-        </div>
-
-        <div>
-          <label for="profile-bio">Bio</label>
-          <textarea
-            id="profile-bio"
-            name="bio"
-            rows="6"
-            maxlength="2000"
-            placeholder="Share a short introduction about your work."
-          >{{ user.bio or '' }}</textarea>
-        </div>
+      <legend><span class="submission-step">01</span> The essentials</legend>
+      {{ field('username', 'Username', 'e.g. ada_researcher', limit=30, autocomplete='username') }}
+      <p class="submission-help" id="username-help">Your public profile will be at /user/your_username. Use 3–30 letters, numbers, or underscores, starting with a letter. Usernames are saved in lowercase.</p>
+      {{ field('name', 'Full name', 'How should we call you?', autocomplete='name') }}
+      <div class="submission-grid">
+        {{ field('institution', 'Institution', 'University of Michigan', autocomplete='organization') }}
+        {{ field('role', 'Role', 'Researcher, faculty, student…', autocomplete='organization-title') }}
       </div>
     </fieldset>
-
+    <fieldset>
+      <legend><span class="submission-step">02</span> Your research, in your words</legend>
+      {{ field('research_interests', 'Research interests', 'Machine learning, climate science, public health', limit=1000) }}
+      <p class="submission-help" id="interests-help">Separate interests with commas. They’ll appear as tags on your profile.</p>
+      <label for="profile-bio">About you <span>(optional)</span></label>
+      <textarea id="profile-bio" name="bio" rows="6" maxlength="2000" placeholder="What are you working on? What questions drive your research?" aria-describedby="bio-help{% if errors.get('bio') %} bio-error{% endif %}" {% if errors.get('bio') %}aria-invalid="true"{% endif %}>{{ fields.bio }}</textarea>
+      <p class="submission-help" id="bio-help">A short introduction, up to 2,000 characters.</p>
+      {% if errors.get('bio') %}<p class="profile-error" id="bio-error">{{ errors.bio }}</p>{% endif %}
+    </fieldset>
     <div class="submission-actions">
       <button class="button button-primary" type="submit">Save profile <span aria-hidden="true">→</span></button>
-      <a href="{{ url_for('home') }}">Skip for now</a>
+      {% if user.username %}<a href="{{ url_for('users.profile') }}">Cancel</a>{% endif %}
     </div>
   </form>
 </div>

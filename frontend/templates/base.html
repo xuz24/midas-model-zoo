@@ -24,8 +24,8 @@
         <a href="{{ url_for('home') }}#about">About</a>
       </nav>
       <div class="header-account">
-        {% if session.get('user_id') %}
-        <span class="account-email" title="{{ session.get('email', '') }}"><span class="account-label">Signed in as</span> {{ session.get('email') or 'Signed-in user' }}</span>
+        {% if session.get('username') or session.get('pending_user') %}
+        <a class="account-email" href="{{ url_for('users.profile') }}" {% if request.endpoint in ['users.profile', 'users.setup_profile'] %}aria-current="page"{% endif %} title="{{ session.get('email', '') }}">My profile</a>
         <form class="logout-form" action="{{ url_for('auth.logout') }}" method="post">
           <button class="logout-button" type="submit">Log out</button>
         </form>

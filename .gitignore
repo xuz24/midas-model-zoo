@@ -5,3 +5,7 @@ __pycache__/
 node_modules/
 frontend/static/dist/
 .env
+.skua
+
+instance/
+backend/instance/

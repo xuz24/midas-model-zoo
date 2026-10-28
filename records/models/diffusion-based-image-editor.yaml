@@ -1,0 +1,12 @@
+id: diffusion-based-image-editor
+name: diffusion-based-image-editor
+summary: Edits an image based on user instruction.
+task: Image generation
+modality: images
+framework: pytorch
+license: apache-2.0
+authors: [Zijie Xu]
+institution: University of Michigan
+base_model: null
+source_url: https://github.com/xuz24/nl_image_editor
+last_updated: 2026-01-24

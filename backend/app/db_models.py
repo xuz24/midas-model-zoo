@@ -5,7 +5,7 @@ from .database import db
 class User(db.Model):
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(30), primary_key=True)
     google_sub = db.Column(
         db.String(255),
         unique=True,

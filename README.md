@@ -30,6 +30,19 @@ After frontend changes, run `npm --prefix frontend run build`, or run
 `npm --prefix frontend run watch` in another terminal for continuous rebuilds.
 Refresh the browser after edits. Flask serves all routes and compiled assets.
 
+## Reset the database
+
+Run `bin/db reset` to delete all tables and data in the configured database and
+reapply the migrations. It uses `DATABASE_URL` from the environment or `.env`,
+defaulting to `instance/research.db`. The command uses `.venv` and works from
+outside the project directory. Stop the app before resetting, then start it again:
+
+```sh
+bin/app stop
+bin/db reset
+bin/app start
+```
+
 ## Editing records
 
 Add or edit `.yaml` or `.yml` files inside `records/models`, `records/datasets`,

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="catalog-hero">
+  <div class="container">
+    <p class="eyebrow">RESEARCH COMMUNITY</p>
+    <div class="catalog-heading">
+      <div><h1>{{ user.name or 'Researcher' }}<span class="maize-dot">.</span></h1><p>Background, interests, and ideas from our research community.</p></div>
+      {% if session.get('username') == user.username %}<a class="button button-primary" href="{{ url_for('users.setup_profile', edit='1') }}">Edit profile <span aria-hidden="true">↗</span></a>{% endif %}
+    </div>
+  </div>
+</section>
+<div class="container profile-layout">
+  <aside class="profile-sidebar profile-identity">
+    <div class="profile-avatar" aria-hidden="true">{{ (user.name or 'R')[:1] | upper }}</div>
+    <h2>{{ user.name or 'Researcher' }}</h2>
+    <p>@{{ user.username }}</p>
+    <p class="profile-role">{{ user.role or 'Research community member' }}</p>
+    {% if user.institution %}<p>{{ user.institution }}</p>{% endif %}
+    {% if user.created_at %}<p class="profile-hint">Member since {{ user.created_at.strftime('%B %Y') }}</p>{% endif %}
+  </aside>
+  <div class="profile-details">
+    <section class="profile-card">
+      <p class="eyebrow">INTRODUCTION</p><h2>About</h2>
+      {% if user.bio %}<p class="profile-bio">{{ user.bio }}</p>{% else %}<p class="profile-empty">This researcher hasn’t added an introduction yet.</p>{% endif %}
+    </section>
+    <section class="profile-card">
+      <p class="eyebrow">AREAS OF EXPLORATION</p><h2>Research interests</h2>
+      {% if interests %}<ul class="profile-tags">{% for interest in interests %}<li>{{ interest }}</li>{% endfor %}</ul>{% else %}<p class="profile-empty">No research interests added yet.</p>{% endif %}
+    </section>
+    <div class="profile-explore"><div><h2>Keep exploring.</h2><p>Discover work from across the research community.</p></div><a class="button button-secondary" href="{{ url_for('home') }}#explore">Explore research <span aria-hidden="true">→</span></a></div>
+  </div>
+</div>
+{% endblock %}

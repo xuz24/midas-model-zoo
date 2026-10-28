@@ -12,6 +12,8 @@ from .records import KINDS, load_records, research_entries, record_details
 from .models import get_models
 from .catalogs import get_datasets, get_papers, get_software
 from .auth import auth_bp
+from .database import db, migrate
+from .users import users_bp
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
@@ -20,14 +22,23 @@ load_dotenv(BASE_DIR / ".env")
 frontend = Path(__file__).resolve().parents[2] / "frontend"
 app = Flask(
     __name__,
+    instance_path=str(BASE_DIR / "instance"),
     template_folder=str(frontend / "templates"),
     static_folder=str(frontend / "static"),
 )
 
 app.config["SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]
 app.config["GOOGLE_CLIENT_ID"] = os.environ["GOOGLE_CLIENT_ID"]
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+    "DATABASE_URL",
+    "sqlite:///research.db"
+)
+
+db.init_app(app)
+migrate.init_app(app, db)
 
 app.register_blueprint(auth_bp)
+app.register_blueprint(users_bp)
 
 
 @app.context_processor

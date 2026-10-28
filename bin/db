@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PYTHON="$ROOT/.venv/bin/python"
+
+if [[ "$#" -ne 1 || "${1:-}" != "reset" ]]; then
+  echo "Usage: $0 reset" >&2
+  echo "Deletes all database tables and data, then applies migrations." >&2
+  exit 2
+fi
+
+if [[ ! -x "$PYTHON" ]]; then
+  echo "Missing .venv. Follow the setup instructions in README.md first." >&2
+  exit 1
+fi
+
+cd "$ROOT"
+"$PYTHON" - <<'PY'
+from flask_migrate import upgrade
+from sqlalchemy import MetaData
+
+from backend.app import BASE_DIR, app
+from backend.app.database import db
+
+with app.app_context():
+    print(f"Resetting {db.engine.url.render_as_string(hide_password=True)}", flush=True)
+    # Reflect the actual schema, including Alembic's revision table, so reset
+    # also handles tables that are no longer present in the application models.
+    metadata = MetaData()
+    metadata.reflect(bind=db.engine)
+    metadata.drop_all(bind=db.engine)
+    upgrade(directory=str(BASE_DIR / "migrations"))
+    print("Database reset complete. All data has been removed and migrations applied.")
+PY
