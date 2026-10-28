@@ -13,6 +13,10 @@ class User(db.Model):
     )
     email = db.Column(db.String(320))
     name = db.Column(db.String(255))
+    institution = db.Column(db.String(255))
+    role = db.Column(db.String(255))
+    research_interests = db.Column(db.String(1000))
+    bio = db.Column(db.Text)
 
     created_at = db.Column(
         db.DateTime(timezone=True),
