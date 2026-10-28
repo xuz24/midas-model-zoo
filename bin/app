@@ -66,6 +66,10 @@ case "${1:-}" in
     echo "App has not stopped yet (PID $PID). See $LOG_FILE." >&2
     exit 1
     ;;
+  restart)
+    "$0" stop
+    "$0" start
+    ;;
   status)
     if running; then
       echo "App is running at http://127.0.0.1:5001 (PID $PID)."
@@ -75,7 +79,7 @@ case "${1:-}" in
     fi
     ;;
   *)
-    echo "Usage: $0 {start|stop|status}" >&2
+    echo "Usage: $0 {start|stop|restart|status}" >&2
     exit 2
     ;;
 esac
