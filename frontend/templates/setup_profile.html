@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="catalog-hero">
+  <div class="container">
+    <p class="eyebrow">YOUR RESEARCH PROFILE</p>
+    <div class="catalog-heading">
+      <div>
+        <h1>Set up your profile<span class="maize-dot">.</span></h1>
+        <p>Tell the Michigan research community a little about yourself.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container" style="max-width: 760px; padding-block: 48px 72px;">
+  <form action="{{ url_for('users.setup_profile') }}" method="post">
+    <fieldset>
+      <legend>Profile information</legend>
+
+      <div style="display: grid; gap: 20px;">
+        <div>
+          <label for="profile-name">Name <span aria-hidden="true">*</span></label>
+          <input
+            id="profile-name"
+            name="name"
+            type="text"
+            value="{{ user.name or '' }}"
+            autocomplete="name"
+            maxlength="255"
+            required
+            autofocus
+          >
+        </div>
+
+        <div>
+          <label for="profile-institution">Institution</label>
+          <input
+            id="profile-institution"
+            name="institution"
+            type="text"
+            value="{{ user.institution or '' }}"
+            autocomplete="organization"
+            maxlength="255"
+            placeholder="e.g. University of Michigan"
+          >
+        </div>
+
+        <div>
+          <label for="profile-role">Role</label>
+          <input
+            id="profile-role"
+            name="role"
+            type="text"
+            value="{{ user.role or '' }}"
+            maxlength="255"
+            placeholder="e.g. PhD student, faculty member, researcher"
+          >
+        </div>
+
+        <div>
+          <label for="profile-interests">Research interests</label>
+          <input
+            id="profile-interests"
+            name="research_interests"
+            type="text"
+            value="{{ user.research_interests or '' }}"
+            maxlength="1000"
+            placeholder="e.g. machine learning, climate science"
+          >
+          <p class="submission-help">Separate multiple interests with commas.</p>
+        </div>
+
+        <div>
+          <label for="profile-bio">Bio</label>
+          <textarea
+            id="profile-bio"
+            name="bio"
+            rows="6"
+            maxlength="2000"
+            placeholder="Share a short introduction about your work."
+          >{{ user.bio or '' }}</textarea>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="submission-actions">
+      <button class="button button-primary" type="submit">Save profile <span aria-hidden="true">→</span></button>
+      <a href="{{ url_for('home') }}">Skip for now</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
