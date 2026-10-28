@@ -34,7 +34,7 @@ case "${1:-}" in
     mkdir -p "$RUN_DIR"
     # Disable the reloader so the recorded PID owns the server directly.
     nohup "$PYTHON" -m flask --app "$ROOT/backend/app" run \
-      --no-debugger --no-reload --host 127.0.0.1 --port 5001 \
+      --no-debugger --no-reload --host localhost --port 5001 \
       > "$LOG_FILE" 2>&1 < /dev/null &
     PID=$!
     echo "$PID" > "$PID_FILE"
@@ -45,7 +45,7 @@ case "${1:-}" in
       cat "$LOG_FILE" >&2
       exit 1
     fi
-    echo "App started at http://127.0.0.1:5001 (PID $PID)."
+    echo "App started at http://localhost:5001 (PID $PID)."
     echo "Log: $LOG_FILE"
     ;;
   stop)
@@ -72,7 +72,7 @@ case "${1:-}" in
     ;;
   status)
     if running; then
-      echo "App is running at http://127.0.0.1:5001 (PID $PID)."
+      echo "App is running at http://localhost:5001 (PID $PID)."
     else
       echo "App is not running."
       exit 1

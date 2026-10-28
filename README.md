@@ -16,7 +16,7 @@ npm --prefix frontend install
 bin/app start
 ```
 
-Open http://127.0.0.1:5001. Port 5001 avoids the macOS service that may occupy 5000.
+Open http://localhost:5001. Port 5001 avoids the macOS service that may occupy 5000.
 Use `bin/app stop` to stop the app, `bin/app restart` to stop and start it again,
 and `bin/app status` to check whether it is running. Later starts only need
 `bin/app start`; the script uses `.venv` directly, builds the frontend, and starts
@@ -24,7 +24,7 @@ Flask in the background. Logs are written to `.run/app.log`. The script also wor
 when called from outside the project directory.
 
 For foreground development with automatic Python reloads, stop the background
-app, activate `.venv`, and run `flask --app backend.app run --debug --port 5001`.
+app, activate `.venv`, and run `flask --app backend.app run --debug --host localhost --port 5001`.
 
 After frontend changes, run `npm --prefix frontend run build`, or run
 `npm --prefix frontend run watch` in another terminal for continuous rebuilds.
