@@ -1,0 +1,5 @@
+{% macro cards(count, grid_class) -%}
+<div class="{{ grid_class }}" aria-hidden="true">
+  {% for _ in range(count) %}<div class="loading-card"><div class="loading-line loading-line-short"></div><div class="loading-line"></div><div class="loading-line"></div><div class="loading-line loading-line-short"></div></div>{% endfor %}
+</div>
+{%- endmacro %}

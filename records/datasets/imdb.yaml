@@ -1,0 +1,27 @@
+id: imdb
+name: IMDb Large Movie Review Dataset
+institution: Stanford University
+summary: English movie reviews for binary sentiment classification, with separate labeled training and
+  test sets plus additional unlabeled reviews.
+modality: text
+task: benchmark
+license: custom
+size: 100,000 reviews
+languages:
+- en
+splits:
+- 25,000 labeled training reviews
+- 25,000 labeled test reviews
+- 50,000 unlabeled reviews
+description: The labeled reviews are divided evenly between positive and negative sentiment. The additional
+  unlabeled partition supports experiments with unsupervised representation learning. The official project
+  page provides downloads and the accompanying paper.
+known_limitations: Movie-review sentiment is a narrow domain and does not represent general language understanding.
+  Reviews can include offensive language; consult the source for usage terms.
+source_url: https://ai.stanford.edu/~amaas/data/sentiment/
+hub_url: https://huggingface.co/datasets/stanfordnlp/imdb
+tags:
+- nlp
+- sentiment-analysis
+- text-classification
+last_updated: '2026-11-11'

@@ -31,3 +31,9 @@ test('recent carousel uses newest records first without changing the catalog', a
   assert.deepEqual(recentResearch([]), []);
   assert.equal(recentResearch([dated[0]]).length, 1);
 });
+
+test('research search keeps its narrower fields and source order', () => {
+  assert.deepEqual(filterResearch(projects, '', 'All'), projects);
+  assert.deepEqual(filterResearch(projects, 'Researcher', 'All'), []);
+  assert.deepEqual(filterResearch(projects, 'NLP', 'All'), []);
+});

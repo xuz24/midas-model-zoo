@@ -12,6 +12,9 @@ from backend.app.records import KINDS, catalog_entries, load_records, safe_url
 class CatalogTests(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
+        github = patch('backend.app.fetch_repository', return_value=None)
+        github.start()
+        self.addCleanup(github.stop)
 
     def test_catalogs_and_detail_pages(self):
         for kind in KINDS:
@@ -21,7 +24,11 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 200)
                 html = response.get_data(as_text=True)
                 self.assertIn(f'href="/{kind}" aria-current="page"', html)
-                data_id = 'model-data' if kind == 'models' else 'catalog-data'
+                self.assertIn(f'data-title="{kind.capitalize()}"', html)
+                share_label = 'Share software' if kind == 'software' else f'Share a {kind[:-1]}'
+                self.assertIn(f'data-share-label="{share_label}"', html)
+
+                data_id = 'catalog-data'
                 payload = re.search(r'<script id="' + data_id + r'" type="application/json">(.*?)</script>', html, re.S)
                 entries = json.loads(payload.group(1))
                 self.assertEqual({e['id'] for e in entries}, {r['id'] for r in records})
@@ -29,12 +36,35 @@ class CatalogTests(unittest.TestCase):
                 for entry in entries:
                     detail = self.client.get(entry['detail_url'])
                     self.assertEqual(detail.status_code, 200)
-                    self.assertIn('Record details', detail.get_data(as_text=True))
+                    self.assertIn('>Details</h2>', detail.get_data(as_text=True))
                 self.assertEqual(self.client.get(f'/{kind}/missing-record').status_code, 404)
+
+    def test_dataset_pages_without_github(self):
+        for record_id in ('imdb', 'squad-v1-1', 'cifar-10', 'mnist'):
+            with self.subTest(record_id=record_id), patch('backend.app.fetch_repository') as fetch:
+                response = self.client.get('/datasets/' + record_id)
+                self.assertEqual(response.status_code, 200)
+                html = response.get_data(as_text=True)
+                self.assertIn('class="record-panel" id="details"', html)
+                self.assertEqual(html.count('id="details"'), 1)
+                self.assertIn('Dataset composition', html)
+                self.assertIn('Usage notes &amp; limitations', html)
+                self.assertIn('id="resources"', html)
+                self.assertLess(html.index('id="details"'), html.index('<aside class="record-sidebar"'))
+                self.assertNotIn('id="readme-title"', html)
+                self.assertNotIn('id="repository-title"', html)
+                self.assertNotIn('temporarily unavailable', html)
+                fetch.assert_not_called()
+
+    def test_github_details_remain_below_resources(self):
+        html = self.client.get('/software/scikit-learn').get_data(as_text=True)
+        self.assertEqual(html.count('id="details"'), 1)
+        self.assertLess(html.index('<aside class="record-sidebar"'), html.index('id="resources"'))
+        self.assertLess(html.index('id="resources"'), html.index('id="details"'))
 
     def test_empty_catalogs(self):
         for kind in KINDS:
-            with self.subTest(kind=kind), patch('backend.app.get_' + kind, return_value=[]):
+            with self.subTest(kind=kind), patch('backend.app.catalog_entries', return_value=[]):
                 self.assertEqual(self.client.get('/' + kind).status_code, 200)
 
     def test_home_uses_all_records(self):
@@ -50,9 +80,8 @@ class CatalogTests(unittest.TestCase):
 
     def test_related_records_and_missing_optional_fields(self):
         html = self.client.get('/models/bert-base-uncased').get_data(as_text=True)
-        self.assertIn('/datasets/wikipedia-2020', html)
         self.assertIn('/papers/devlin-2018-bert', html)
-        self.assertIn('https://huggingface.co/bert-base-uncased', html)
+        self.assertIn('https://huggingface.co/google-bert/bert-base-uncased', html)
         dataset = catalog_entries('datasets')[0]
         self.assertEqual(dataset['owner'], 'Contributor not specified')
 
@@ -83,7 +112,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_json_safely_escapes_submission_text(self):
         entry = dict(id='test', title='</script><script>alert(1)</script>', owner='Lab', description='Demo', category='AI', format='CSV', tags=[], updated='2026-10-01', detail_url='/datasets/test')
-        with patch('backend.app.get_datasets', return_value=[entry]):
+        with patch('backend.app.catalog_entries', return_value=[entry]):
             html = self.client.get('/datasets').get_data(as_text=True)
         self.assertNotIn(entry['title'], html)
         payload = re.search(r'<script id="catalog-data" type="application/json">(.*?)</script>', html, re.S)

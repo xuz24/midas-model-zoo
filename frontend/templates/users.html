@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from "_profile.html" import avatar %}
+{% block content %}
+<section class="container researcher-directory" aria-labelledby="researchers-title">
+  <header class="researcher-directory-header">
+    <p class="eyebrow">THE RESEARCH COMMUNITY</p>
+    <h1 id="researchers-title">Explore researchers<span class="maize-dot">.</span></h1>
+    <p>Find people, discover shared interests, and explore the community.</p>
+  </header>
+  <form class="researcher-search" action="{{ url_for('users.directory') }}" method="get" role="search">
+    <label for="researcher-query">Search researchers</label>
+    <div class="researcher-search-controls">
+      <input id="researcher-query" type="search" name="q" value="{{ query }}" maxlength="200" placeholder="Name, username, university, or research interest" aria-describedby="researcher-search-help">
+      <button class="button button-primary" type="submit">Search</button>
+      {% if query %}<a class="profile-text-link" href="{{ url_for('users.directory') }}">Clear search</a>{% endif %}
+    </div>
+    <p id="researcher-search-help">Search names, affiliations, roles, biographies, and interest tags.</p>
+  </form>
+  <p class="researcher-result-count" role="status">{{ total }} researcher{{ '' if total == 1 else 's' }}{% if query %} matching “{{ query }}”{% endif %}</p>
+  <div class="researcher-grid">
+    {% for researcher in researchers %}
+    <article class="researcher-card">
+      <div class="researcher-card-identity">
+        {{ avatar(researcher) }}
+        <div><h2><a href="{{ url_for('users.user', username=researcher.username) }}">{{ researcher.name or researcher.username }}</a></h2><p>@{{ researcher.username }}</p></div>
+      </div>
+      {% if researcher.role %}<p class="researcher-card-role">{{ researcher.role }}</p>{% endif %}
+      {% if researcher.institution %}<p class="researcher-card-affiliation">{{ researcher.institution }}</p>{% endif %}
+      {% if researcher.bio %}<p class="researcher-card-bio">{{ researcher.bio | truncate(180) }}</p>{% endif %}
+      {% if researcher.interest_list %}<ul class="profile-tags" aria-label="Research interests">{% for interest in researcher.interest_list[:4] %}<li>{{ interest }}</li>{% endfor %}{% if researcher.interest_list | length > 4 %}<li>+{{ researcher.interest_list | length - 4 }} more</li>{% endif %}</ul>{% endif %}
+      <a class="researcher-profile-link" href="{{ url_for('users.user', username=researcher.username) }}" aria-label="View {{ researcher.name or researcher.username }}’s profile">View profile <span aria-hidden="true">→</span></a>
+    </article>
+    {% else %}
+    <div class="researcher-empty">
+      <h2>{{ 'No researchers found' if query else 'The community is growing' }}</h2>
+      <p>{{ 'Try a different name or a broader research topic.' if query else 'Researcher profiles will appear here as people join.' }}</p>
+      {% if query %}<a class="button button-secondary" href="{{ url_for('users.directory') }}">Browse all researchers</a>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% if pages > 1 %}
+  <nav class="researcher-pagination" aria-label="Researcher pages">
+    {% if page > 1 %}<a class="button button-secondary" href="{{ url_for('users.directory', q=query, page=page-1) }}">← Previous</a>{% endif %}
+    <span>Page {{ page }} of {{ pages }}</span>
+    {% if page < pages %}<a class="button button-secondary" href="{{ url_for('users.directory', q=query, page=page+1) }}">Next →</a>{% endif %}
+  </nav>
+  {% endif %}
+</section>
+{% endblock %}

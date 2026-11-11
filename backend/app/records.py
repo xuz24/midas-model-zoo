@@ -97,5 +97,5 @@ def record_details(kind, record):
             elif key == 'doi':
                 link = 'https://doi.org/' + quote(label, safe='/')
             cells.append(dict(label=label, url=link))
-        rows.append(dict(label=key.replace('_', ' ').capitalize(), values=cells))
+        rows.append(dict(key=key, label=key.replace('_', ' ').capitalize(), values=cells))
     return rows

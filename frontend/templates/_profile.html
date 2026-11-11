@@ -1,0 +1,32 @@
+{% macro avatar(user) -%}
+  <div class="profile-avatar" aria-hidden="true">
+    <span>{{ (user.name or user.username or 'R')[:1] | upper }}</span>
+    {% if user.avatar_url %}<img data-profile-picture src="{{ user.avatar_url }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">{% endif %}
+  </div>
+{%- endmacro %}
+
+{% macro identity(user) -%}
+  <aside class="profile-sidebar profile-identity">
+    {{ avatar(user) }}
+    <h2>{{ user.name or 'Researcher' }}</h2>
+    <p>@{{ user.username }}</p>
+    <p class="profile-role">{{ user.role or 'Research community member' }}</p>
+    {% if user.institution %}<div class="profile-affiliation"><span class="eyebrow">University affiliation</span><p>{{ user.institution }}</p></div>{% endif %}
+    {% if caller is defined %}{{ caller() }}{% endif %}
+    {% if user.created_at %}<p class="profile-hint">Member since {{ user.created_at.strftime('%B %Y') }}</p>{% endif %}
+  </aside>
+{%- endmacro %}
+
+{% macro biography(user, heading) -%}
+  <section class="profile-card">
+    <p class="eyebrow">INTRODUCTION</p><h2>{{ heading }}</h2>
+    {% if user.bio %}<p class="profile-bio">{{ user.bio }}</p>{% else %}{{ caller() }}{% endif %}
+  </section>
+{%- endmacro %}
+
+{% macro research_interests(interests) -%}
+  <section class="profile-card">
+    <p class="eyebrow">AREAS OF EXPLORATION</p><h2>Research interests</h2>
+    {% if interests %}<ul class="profile-tags">{% for interest in interests %}<li>{{ interest }}</li>{% endfor %}</ul>{% else %}{{ caller() }}{% endif %}
+  </section>
+{%- endmacro %}

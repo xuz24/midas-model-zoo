@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_loading.html" import cards %}
 {% block content %}
 <section class="hero">
   <div class="container hero-grid">
@@ -8,14 +9,15 @@
       <div class="hero-actions"><a class="button button-primary" href="#explore">Explore Research <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="{{ url_for('submit_research') }}">Share Your Research <span aria-hidden="true">→</span></a></div>
     </div>
     <div id="research-carousel">
+      {% if research %}<div class="loading-placeholder loading-carousel" role="status" aria-label="Loading recent research">{{ cards(1, 'loading-carousel-card') }}</div>{% endif %}
       <noscript><p>Browse the latest research in the <a href="#explore">research catalog</a>.</p></noscript>
     </div>
   </div>
 </section>
 <section class="container discovery" id="explore" aria-label="Research discovery">
-  <div id="research-explorer"><p>Loading research…</p></div>
+  <div id="research-explorer"><div class="loading-placeholder" role="status" aria-label="Loading research"><div class="loading-discovery-controls" aria-hidden="true"><div class="loading-line loading-line-short"></div><div class="loading-control"></div></div>{{ cards(research | length, 'research-grid') }}</div></div>
   <script id="research-data" type="application/json">{{ research | tojson }}</script>
-  <noscript><p>Enable JavaScript to search and filter research records.</p></noscript>
+  <noscript><style>.loading-placeholder { display:none; }</style><p>Enable JavaScript to search and filter research records.</p></noscript>
 </section>
 <section class="container" id="about">
   <div class="share-panel">

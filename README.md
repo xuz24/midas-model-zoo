@@ -104,3 +104,13 @@ stored. Visitors can pause/play, step through cards, or choose a card directly.
 Hovering or hiding the browser tab suspends rotation; interacting with a card or
 navigation control pauses it until Play is selected. Reduced-motion preferences
 start the carousel paused. YAML changes appear after refreshing the page.
+
+Record pages enrich public GitHub repository links in `source_url`, `github_url`,
+`repository_url`, `repo_url`, or `github` with repository metadata and a sanitized
+README. The backend uses GitHub's repository and README REST endpoints
+(https://docs.github.com/en/rest/repos). Successful responses are cached in each
+server process for 15 minutes; failures are cached for one minute. GitHub outages,
+rate limits, and missing READMEs leave the catalog record accessible.
+Optionally set `GITHUB_TOKEN` in the server environment to increase API rate
+limits. The token is used only by the backend. Install the updated
+`requirements.txt` before starting the server.

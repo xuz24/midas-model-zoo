@@ -1,16 +1,12 @@
 import os
 import json
-import hmac
 from pathlib import Path
 
-from flask import Flask, abort, redirect, render_template, url_for, request, session
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
+from flask import Flask, abort, redirect, render_template, url_for
 from dotenv import load_dotenv
 
-from .records import KINDS, load_records, research_entries, record_details
-from .models import get_models
-from .catalogs import get_datasets, get_papers, get_software
+from .records import catalog_entries, KINDS, load_records, research_entries, record_details
+from .github import repository_path, fetch_repository
 from .auth import auth_bp
 from .database import db, migrate
 from .users import users_bp
@@ -55,24 +51,33 @@ def home():
     return render_template("home.html", title="Michigan Research Hub", research=research_entries())
 
 
+def render_catalog(kind):
+    catalog_title = kind.capitalize()
+    singular = kind[:-1] if kind != "software" else kind
+    share_label = "Share software" if kind == "software" else f"Share a {singular}"
+    return render_template("catalog.html", title=f"{catalog_title} | Michigan Research Hub",
+                           kind=kind, catalog_title=catalog_title, share_label=share_label,
+                           introduction="", entries=catalog_entries(kind))
+
+
 @app.get("/models")
 def models():
-    return render_template("models.html", title="Models | Michigan Research Hub", models=get_models())
+    return render_catalog("models")
 
 
 @app.get("/datasets")
 def datasets():
-    return render_template("datasets.html", title="Datasets | Michigan Research Hub", entries=get_datasets())
+    return render_catalog("datasets")
 
 
 @app.get("/papers")
 def papers():
-    return render_template("papers.html", title="Papers | Michigan Research Hub", entries=get_papers())
+    return render_catalog("papers")
 
 
 @app.get("/software")
 def software():
-    return render_template("software.html", title="Software | Michigan Research Hub", entries=get_software())
+    return render_catalog("software")
 
 
 @app.get("/<kind>/<record_id>")
@@ -82,8 +87,19 @@ def record_detail(kind, record_id):
     record = next((r for r in load_records(kind) if r['id'] == record_id), None)
     if record is None:
         abort(404)
+    github_path = repository_path(record)
+    repository = fetch_repository(github_path) if github_path else None
+    fields = record_details(kind, record)
+    resource_keys = {'github_url', 'repository_url', 'repo_url', 'github', 'source_url', 'hub_url', 'arxiv_url', 'doi', 'package_url', 'docs_url'}
+    related_keys = {'base_model', 'models', 'datasets', 'papers'}
+    tags = [str(value) for key in ('task', 'modality', 'framework', 'language', 'license', 'tags')
+            for value in (record.get(key) if isinstance(record.get(key), list) else [record.get(key)])
+            if value]
     return render_template("record.html", title=record.get('title', record.get('name')),
-                           kind=kind, record=record, fields=record_details(kind, record))
+                           kind=kind, record=record, tags=tags, repository=repository, github_path=github_path,
+                           detail_fields=[field for field in fields if field['key'] not in resource_keys | related_keys | {'last_updated', 'tags', 'description', 'known_limitations'}],
+                           resource_fields=[field for field in fields if field['key'] in resource_keys],
+                           related_fields=[field for field in fields if field['key'] in related_keys])
 
 
 @app.get("/submit")

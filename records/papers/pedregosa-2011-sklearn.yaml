@@ -1,0 +1,31 @@
+id: pedregosa-2011-sklearn
+title: 'Scikit-learn: Machine Learning in Python'
+authors:
+- Fabian Pedregosa
+- Gaël Varoquaux
+- Alexandre Gramfort
+- Vincent Michel
+- Bertrand Thirion
+- Olivier Grisel
+- Mathieu Blondel
+- Peter Prettenhofer
+- Ron Weiss
+- Vincent Dubourg
+- Jake Vanderplas
+- Alexandre Passos
+- David Cournapeau
+- Matthieu Brucher
+- Matthieu Perrot
+- Édouard Duchesnay
+year: 2011
+venue: Journal of Machine Learning Research
+arxiv_url: https://arxiv.org/abs/1201.0490
+source_url: https://jmlr.org/papers/v12/pedregosa11a.html
+summary: Describes a Python library that brings supervised and unsupervised learning algorithms together
+  behind a consistent interface. Discusses its emphasis on usability, documentation, and integration with
+  scientific Python.
+tags:
+- machine-learning
+- python
+- scientific-computing
+last_updated: '2026-11-11'

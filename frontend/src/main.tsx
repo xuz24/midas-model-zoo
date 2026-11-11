@@ -1,12 +1,11 @@
 import 'vite/modulepreload-polyfill';
 import { createRoot } from 'react-dom/client';
 import { ResearchExplorer } from './components/ResearchExplorer';
-import { ModelExplorer } from './components/ModelExplorer';
-import type { Model } from './models';
 import { CatalogExplorer } from './components/CatalogExplorer';
-import type { CatalogEntry } from './catalog';
+import { modelCatalogEntry, type CatalogEntry } from './catalog';
 import { ResearchCarousel } from './components/ResearchCarousel';
 import './styles.css';
+import { ResearchInterestPicker } from './components/ResearchInterestPicker';
 
 const researchKind = document.querySelector<HTMLSelectElement>('#research-kind');
 if (researchKind) {
@@ -35,17 +34,26 @@ if (researchData) {
   if (carousel) createRoot(carousel).render(<ResearchCarousel projects={projects} />);
 }
 
-const modelExplorer = document.getElementById('model-explorer');
-const modelData = document.getElementById('model-data');
-if (modelExplorer && modelData) {
-  const models: Model[] = JSON.parse(modelData.textContent || '[]');
-  createRoot(modelExplorer).render(<ModelExplorer models={models} />);
-}
-
 const catalogExplorer = document.getElementById('catalog-explorer');
 const catalogData = document.getElementById('catalog-data');
 const kind = catalogExplorer?.dataset.kind;
-if (catalogExplorer && catalogData && (kind === 'datasets' || kind === 'papers' || kind === 'software')) {
-  const entries: CatalogEntry[] = JSON.parse(catalogData.textContent || '[]');
-  createRoot(catalogExplorer).render(<CatalogExplorer entries={entries} kind={kind} />);
+if (catalogExplorer && catalogData && (kind === 'models' || kind === 'datasets' || kind === 'papers' || kind === 'software')) {
+  const data = JSON.parse(catalogData.textContent || '[]');
+  const entries: CatalogEntry[] = kind === 'models' ? data.map(modelCatalogEntry) : data;
+  createRoot(catalogExplorer).render(<CatalogExplorer entries={entries} kind={kind} title={catalogExplorer.dataset.title || kind} introduction={catalogExplorer.dataset.introduction || ''} shareLabel={catalogExplorer.dataset.shareLabel || 'Share research'} shareUrl={catalogExplorer.dataset.shareUrl || '/submit'} />);
 }
+
+const interestPicker = document.getElementById('research-interest-picker');
+const interestData = document.getElementById('research-interest-data');
+if (interestPicker && interestData) {
+  const data = JSON.parse(interestData.textContent || '{}');
+  createRoot(interestPicker).render(<ResearchInterestPicker options={data.options} initial={data.selected} />);
+}
+
+// Keep initials visible until the remote image has loaded successfully.
+document.querySelectorAll<HTMLImageElement>('[data-profile-picture]').forEach(picture => {
+  const showPicture = () => picture.classList.toggle('is-loaded', picture.naturalWidth > 0);
+  picture.addEventListener('load', showPicture);
+  picture.addEventListener('error', () => picture.classList.remove('is-loaded'));
+  if (picture.complete) showPicture();
+});

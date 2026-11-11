@@ -1,0 +1,24 @@
+id: distilbert-base-uncased
+name: DistilBERT Base (Uncased)
+summary: A compact English language encoder trained by distilling BERT. It supports masked-token prediction
+  and fine-tuning for downstream language tasks.
+task: fill-mask
+modality: text
+framework: pytorch
+license: apache-2.0
+authors:
+- Victor Sanh
+- Lysandre Debut
+- Julien Chaumond
+- Thomas Wolf
+institution: Hugging Face
+base_model: bert-base-uncased
+papers:
+- sanh-2019-distilbert
+source_url: https://github.com/huggingface/transformers
+hub_url: https://huggingface.co/distilbert/distilbert-base-uncased
+tags:
+- nlp
+- knowledge-distillation
+- transformers
+last_updated: '2026-11-11'

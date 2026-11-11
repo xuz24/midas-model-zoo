@@ -5,9 +5,15 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
 from .database import db
-from .db_models import User
+from .db_models import User, profile_picture_url
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
+
+
+def sign_in_user(user):
+    session.pop("pending_user", None)
+    session["username"] = user.username
+    session["email"] = user.email
 
 
 @auth_bp.post("/google")
@@ -45,11 +51,15 @@ def google_login():
             "google_sub": user["sub"],
             "email": user.get("email"),
             "name": user.get("name"),
+            "picture_url": profile_picture_url(user.get("picture")),
         }
         return redirect(url_for("users.setup_profile"))
 
-    session["username"] = db_user.username
-    session["email"] = db_user.email
+    picture_url = profile_picture_url(user.get("picture"))
+    if db_user.picture_url != picture_url:
+        db_user.picture_url = picture_url
+        db.session.commit()
+    sign_in_user(db_user)
     return redirect(url_for("home"))
 
 

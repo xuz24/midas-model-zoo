@@ -1,0 +1,20 @@
+id: sanh-2019-distilbert
+title: 'DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter'
+authors:
+- Victor Sanh
+- Lysandre Debut
+- Julien Chaumond
+- Thomas Wolf
+year: 2019
+venue: NeurIPS 2019 EMC² Workshop
+arxiv_url: https://arxiv.org/abs/1910.01108
+summary: Studies knowledge distillation during language model pretraining to produce a smaller BERT-style
+  encoder. Evaluates its efficiency and performance on language understanding tasks.
+models:
+- distilbert-base-uncased
+- bert-base-uncased
+tags:
+- nlp
+- knowledge-distillation
+- efficient-ml
+last_updated: '2026-11-11'

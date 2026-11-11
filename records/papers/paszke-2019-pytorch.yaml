@@ -1,0 +1,34 @@
+id: paszke-2019-pytorch
+title: 'PyTorch: An Imperative Style, High-Performance Deep Learning Library'
+authors:
+- Adam Paszke
+- Sam Gross
+- Francisco Massa
+- Adam Lerer
+- James Bradbury
+- Gregory Chanan
+- Trevor Killeen
+- Zeming Lin
+- Natalia Gimelshein
+- Luca Antiga
+- Alban Desmaison
+- Andreas Köpf
+- Edward Yang
+- Zach DeVito
+- Martin Raison
+- Alykhan Tejani
+- Sasank Chilamkurthy
+- Benoit Steiner
+- Lu Fang
+- Junjie Bai
+- Soumith Chintala
+year: 2019
+venue: NeurIPS 2019
+arxiv_url: https://arxiv.org/abs/1912.01703
+summary: Explains the design of PyTorch as an imperative deep learning library. Describes how automatic
+  differentiation, tensor operations, and accelerator support combine with Python programming.
+tags:
+- deep-learning
+- python
+- scientific-computing
+last_updated: '2026-11-11'

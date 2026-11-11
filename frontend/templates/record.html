@@ -1,18 +1,83 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="catalog-hero">
+<div class="record-page">
   <div class="container">
-    <p class="eyebrow"><a href="{{ url_for(kind) }}">← BACK TO {{ kind | upper }}</a></p>
-    <div class="catalog-heading"><div><h1>{{ title }}</h1><p>{{ record.summary }}</p></div></div>
+    <nav class="record-breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ url_for(kind) }}">{{ kind | capitalize }}</a><span aria-hidden="true">/</span><span aria-current="page">{{ title }}</span>
+    </nav>
+
+    <header class="record-header">
+      <div class="record-header-copy">
+        <p class="record-type">{{ kind[:-1] if kind != 'software' else 'software' }}</p>
+        <h1>{{ title }}</h1>
+        <p class="record-byline">{% if record.institution %}{{ record.institution }}<span class="record-byline-dot">·</span>{% elif record.authors %}{{ record.authors | join(', ') }}<span class="record-byline-dot">·</span>{% elif record.venue %}{{ record.venue }}<span class="record-byline-dot">·</span>{% elif record.registry %}{{ record.registry }}<span class="record-byline-dot">·</span>{% endif %}Updated <time datetime="{{ record.last_updated }}">{{ record.last_updated }}</time></p>
+      </div>
+    </header>
+
+    {% if tags %}<ul class="record-tags" aria-label="Tags">{% for tag in tags %}<li>{{ tag }}</li>{% endfor %}</ul>{% endif %}
+
+    <div class="record-layout{% if github_path and (not repository or not repository.readme) %} record-layout-compact{% endif %}">
+      <div class="record-main">
+        <section class="record-panel record-overview" id="overview" aria-labelledby="overview-title">
+          <h2 id="overview-title">Overview</h2>
+          <p>{{ record.summary }}</p>
+          {% if github_path and (not repository or not repository.readme) %}
+          {% set facts = [('Size', record.size), ('Task', record.task), ('Modality', record.modality), ('Published', record.year)] %}
+          {% if record.size or record.task or record.modality or record.year %}
+          <dl class="record-highlights">
+            {% for label, value in facts %}{% if value %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endif %}{% endfor %}
+          </dl>
+          {% endif %}
+          {% if resource_fields %}
+          <div class="record-source-actions">
+            {% for field in resource_fields %}{% if field.key in ['source_url', 'hub_url', 'doi', 'arxiv_url'] %}{% for value in field['values'] %}{% if value.url %}
+            <a href="{{ value.url }}">{{ {'source_url': 'Visit source', 'hub_url': 'View on Hugging Face', 'doi': 'Read publication', 'arxiv_url': 'Read on arXiv'}[field.key] }} <span aria-hidden="true">↗</span></a>
+            {% endif %}{% endfor %}{% endif %}{% endfor %}
+          </div>
+          {% endif %}
+          {% endif %}
+          {% if record.description %}<div class="record-overview-section"><h3>{{ 'Dataset composition' if kind == 'datasets' else 'Description' }}</h3><p>{{ record.description }}</p></div>{% endif %}
+          {% if record.known_limitations %}<div class="record-overview-section"><h3>Usage notes &amp; limitations</h3><p>{{ record.known_limitations }}</p></div>{% endif %}
+        </section>
+
+
+        {% if not github_path %}{% include "_record_details.html" %}{% endif %}
+
+        {% if repository and repository.readme %}
+        <section class="record-panel" aria-labelledby="readme-title">
+          <h2 id="readme-title">README</h2>
+          <div class="repository-readme">{{ repository.readme | safe }}</div>
+        </section>
+        {% endif %}
+
+      </div>
+
+      <aside class="record-sidebar" aria-label="Page information">
+        {% if resource_fields %}
+        <section class="record-side-panel" id="resources" aria-labelledby="resources-title">
+          <h2 id="resources-title">Resources</h2>
+          <ul class="record-resource-list">
+            {% for field in resource_fields %}{% for value in field['values'] %}
+            <li>{% if value.url %}<a href="{{ value.url }}"><span>{{ field.label }}</span><span aria-hidden="true">↗</span></a>{% else %}<span class="record-resource-text">{{ field.label }}: {{ value.label }}</span>{% endif %}</li>
+            {% endfor %}{% endfor %}
+          </ul>
+        </section>
+        {% endif %}
+        {% if github_path %}{% include "_record_details.html" %}{% endif %}
+        {% if related_fields %}
+        <section class="record-side-panel" id="related" aria-labelledby="related-title">
+          <h2 id="related-title">Related research</h2>
+          {% for field in related_fields %}
+          <div class="record-related-group">
+            <h3>{{ field.label }}</h3>
+            <ul>{% for value in field['values'] %}<li>{% if value.url %}<a href="{{ value.url }}">{{ value.label }} <span aria-hidden="true">↗</span></a>{% else %}{{ value.label }}{% endif %}</li>{% endfor %}</ul>
+          </div>
+          {% endfor %}
+        </section>
+        {% endif %}
+      </aside>
+    </div>
+    <a class="record-back-link" href="{{ url_for(kind) }}"><span aria-hidden="true">←</span> Back to {{ kind }}</a>
   </div>
-</section>
-<section class="container record-details">
-  <h2>Record details</h2>
-  <p class="search-help">Metadata as provided in the catalog record.</p>
-  <dl>{% for field in fields %}
-    <div class="record-field"><dt>{{ field.label }}</dt><dd>{% for value in field['values'] %}
-      <div>{% if value.url %}<a href="{{ value.url }}">{{ value.label }} ↗</a>{% else %}{{ value.label }}{% endif %}</div>
-    {% else %}Not specified{% endfor %}</dd></div>
-  {% endfor %}</dl>
-</section>
+</div>
 {% endblock %}

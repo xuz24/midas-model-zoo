@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { recentResearch, type Research } from '../research';
 import { ResearchCard } from './ResearchCard';
+import { formatDate } from '../dates';
 
 export function ResearchCarousel({ projects }: { projects: Research[] }) {
   const slides = useMemo(() => recentResearch(projects), [projects]);
@@ -52,7 +53,7 @@ export function ResearchCarousel({ projects }: { projects: Research[] }) {
           role="group" aria-roledescription="slide" aria-label={`${position + 1} of ${slides.length}`}
           aria-hidden={position !== activeIndex} inert={position !== activeIndex}>
           <ResearchCard project={project}/>
-          <p className="carousel-date">Updated <time dateTime={project.updated}>{new Date(`${project.updated}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time></p>
+          <p className="carousel-date">Updated <time dateTime={project.updated}>{formatDate(project.updated)}</time></p>
         </div>;
         })}
       </div>

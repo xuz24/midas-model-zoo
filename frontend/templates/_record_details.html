@@ -1,0 +1,32 @@
+        <section class="{{ 'record-side-panel record-sidebar-details' if github_path else 'record-panel' }}" id="details" aria-labelledby="record-details-title">
+          <h2 id="record-details-title">Details</h2>
+          <dl class="record-details-list">
+            <div class="record-detail-row"><dt>Type</dt><dd>{{ kind[:-1] if kind != 'software' else 'software' }}</dd></div>
+            <div class="record-detail-row"><dt>Record updated</dt><dd><time datetime="{{ record.last_updated }}">{{ record.last_updated }}</time></dd></div>
+            {% for field in detail_fields %}
+            <div class="record-detail-row">
+              <dt>{{ field.label }}</dt>
+              <dd>{% for value in field['values'] %}<span class="record-value">{% if value.url %}<a href="{{ value.url }}">{{ value.label }} ↗</a>{% else %}{{ value.label }}{% endif %}</span>{% else %}Not specified{% endfor %}</dd>
+            </div>
+            {% endfor %}
+          </dl>
+          {% if github_path %}
+          <div class="record-repository-details" aria-labelledby="repository-title">
+            <h3 id="repository-title">GitHub repository</h3>
+          {% if repository %}
+          <h3><a href="{{ repository.url }}">{{ repository.full_name }}</a></h3>
+          {% if repository.description %}<p>{{ repository.description }}</p>{% endif %}
+          <dl class="record-details-list">
+            {% for label, value in [('Stars', repository.stargazers_count), ('Forks', repository.forks_count), ('Primary language', repository.language or 'Not specified'), ('License', repository.license or 'Not specified')] %}
+            <div class="record-detail-row"><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+            {% endfor %}
+            {% for label, value in [('Created', repository.created_at), ('Last updated', repository.updated_at)] %}
+            <div class="record-detail-row"><dt>{{ label }}</dt><dd>{% if value %}<time datetime="{{ value }}">{{ value }}</time>{% else %}Not specified{% endif %}</dd></div>
+            {% endfor %}
+            <div class="record-detail-row"><dt>URLs</dt><dd><a href="{{ repository.url }}">Repository ↗</a>{% if repository.homepage %}<br><a href="{{ repository.homepage }}">Project website ↗</a>{% endif %}</dd></div>
+          </dl>
+          {% if repository.topics %}<ul class="record-tags" aria-label="Repository topics">{% for topic in repository.topics %}<li>{{ topic }}</li>{% endfor %}</ul>{% endif %}
+          {% else %}<p>Repository information is temporarily unavailable. <a href="https://github.com/{{ github_path }}">View on GitHub ↗</a></p>{% endif %}
+          </div>
+          {% endif %}
+        </section>

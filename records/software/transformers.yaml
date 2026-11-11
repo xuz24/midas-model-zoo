@@ -1,0 +1,24 @@
+id: transformers
+name: Hugging Face Transformers
+summary: A library of pretrained models and tools for text, vision, audio, and multimodal machine learning.
+  Provides shared interfaces for loading checkpoints, training, and inference.
+language: python
+license: apache-2.0
+institution: Hugging Face
+registry: pypi
+package_url: https://pypi.org/project/transformers/
+source_url: https://github.com/huggingface/transformers
+install: pip install transformers
+docs_url: https://huggingface.co/docs/transformers/
+papers:
+- wolf-2020-transformers
+models:
+- bert-base-uncased
+- distilbert-base-uncased
+- vit-base-patch16-224
+tags:
+- deep-learning
+- nlp
+- computer-vision
+- transformers
+last_updated: '2026-11-11'

@@ -1,0 +1,26 @@
+id: squad-v1-1
+name: SQuAD 1.1
+institution: Stanford University
+summary: A reading comprehension benchmark pairing questions with Wikipedia passages and annotated answer
+  spans. This entry describes version 1.1, in which every question has an answer in its passage.
+modality: text
+task: benchmark
+license: cc-by-sa-4.0
+size: 98,169 question-answer examples
+languages:
+- en
+splits:
+- 87,599 training examples
+- 10,570 validation examples
+description: Each example contains a Wikipedia passage, a crowd-written question, and the text and character
+  offsets of an answer. The public training and validation partitions support extractive question answering
+  experiments. SQuAD 2.0 is a separate version that adds unanswerable questions.
+known_limitations: Answers are spans in a supplied English passage. Results do not measure open-domain
+  retrieval or the ability to identify unanswerable questions.
+source_url: https://rajpurkar.github.io/SQuAD-explorer/
+hub_url: https://huggingface.co/datasets/rajpurkar/squad
+tags:
+- nlp
+- question-answering
+- reading-comprehension
+last_updated: '2026-11-11'

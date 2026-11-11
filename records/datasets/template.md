@@ -8,7 +8,7 @@ A dataset entry describes one dataset and links back to its stable source. Save 
 | `name` | Yes | text | Display name |
 | `summary` | Yes | 1 to 2 sentences | Written for the site |
 | `modality` | Yes | `text`, `image`, `audio`, `video`, `tabular`, `multimodal` | Filter field |
-| `license` | Yes | SPDX identifier or `custom` | |
+| `license` | Yes | SPDX identifier, `custom`, or `unknown` | |
 | `last_updated` | Yes | date | |
 | `task` | No | `pretraining`, `fine-tuning`, `evaluation`, `benchmark`, `other` | Filter field |
 | `size` | No | text, such as `6 GB` | Human-readable |
@@ -18,3 +18,5 @@ A dataset entry describes one dataset and links back to its stable source. Save 
 | `known_limitations` | No | text | Shown on the page when present |
 | `source_url` | No | URL | Primary link, stable dataset URL |
 | `hub_url` | No | URL | Hugging Face Hub page |
+
+Optional `description` text appears in the main overview, `splits` is a list of split descriptions, and `tags` is a list of topic labels. Use `unknown` when the source does not specify a license.

@@ -20,12 +20,12 @@
         <a href="{{ url_for('datasets') }}" {% if request.endpoint == 'datasets' %}aria-current="page"{% endif %}>Datasets</a>
         <a href="{{ url_for('papers') }}" {% if request.endpoint == 'papers' %}aria-current="page"{% endif %}>Papers</a>
         <a href="{{ url_for('software') }}" {% if request.endpoint == 'software' %}aria-current="page"{% endif %}>Software</a>
+        <a href="{{ url_for('users.directory') }}" {% if request.endpoint in ['users.directory', 'users.user'] %}aria-current="page"{% endif %}>Researchers</a>
         <a href="{{ url_for('submit_research') }}" {% if request.endpoint == 'submit_research' %}aria-current="page"{% endif %}>Submit Research</a>
-        <a href="{{ url_for('home') }}#about">About</a>
       </nav>
       <div class="header-account">
         {% if session.get('username') or session.get('pending_user') %}
-        <a class="account-email" href="{{ url_for('users.profile') }}" {% if request.endpoint in ['users.profile', 'users.setup_profile'] %}aria-current="page"{% endif %} title="{{ session.get('email', '') }}">My profile</a>
+        <a class="account-email" href="{{ url_for('users.profile') }}" {% if request.endpoint in ['users.profile', 'users.setup_profile'] or (request.endpoint == 'users.user' and session.get('username') == user.username) %}aria-current="page"{% endif %} title="{{ session.get('email', '') }}">My profile</a>
         <form class="logout-form" action="{{ url_for('auth.logout') }}" method="post">
           <button class="logout-button" type="submit">Log out</button>
         </form>
@@ -45,6 +45,7 @@
             data-theme="outline"
             data-text="signin_with"
             data-size="large"
+            data-width="200"
             data-logo_alignment="left">
         </div>
         {% endif %}

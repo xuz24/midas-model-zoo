@@ -1,0 +1,18 @@
+id: vit-base-patch16-224
+name: Vision Transformer Base (16×16 patches)
+summary: An image classifier that represents an image as a sequence of patches. This checkpoint was pretrained
+  on ImageNet-21k and fine-tuned on ImageNet at 224×224 resolution.
+task: image-classification
+modality: image
+framework: pytorch
+license: apache-2.0
+institution: Google Research
+papers:
+- dosovitskiy-2021-vit
+source_url: https://github.com/google-research/vision_transformer
+hub_url: https://huggingface.co/google/vit-base-patch16-224
+tags:
+- computer-vision
+- image-classification
+- transformers
+last_updated: '2026-11-11'

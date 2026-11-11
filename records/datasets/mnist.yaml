@@ -1,0 +1,22 @@
+id: mnist
+name: MNIST Handwritten Digits
+summary: A handwritten digit recognition benchmark containing grayscale images of digits zero through
+  nine. Images are normalized to 28×28 pixels.
+modality: image
+task: benchmark
+license: mit
+size: 70,000 images
+splits:
+- 60,000 training images
+- 10,000 test images
+description: Each image is paired with one of ten digit labels. The small image size and established train/test
+  split make the dataset useful for introductory classification experiments and checking model training
+  pipelines.
+known_limitations: Centered grayscale digits are much simpler than natural images or unconstrained handwriting.
+  Strong performance here does not imply general visual recognition capability.
+source_url: https://huggingface.co/datasets/ylecun/mnist
+tags:
+- computer-vision
+- handwriting
+- image-classification
+last_updated: '2026-11-11'

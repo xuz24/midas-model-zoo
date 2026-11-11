@@ -1,3 +1,5 @@
+import { compareRecent, matchesSearch, searchTerms } from './collection.ts';
+
 export type Category = string;
 export type Research = {
   id: string; title: string; description: string; category: Category;
@@ -7,13 +9,13 @@ export type Research = {
 };
 
 export function filterResearch(projects: Research[], query: string, category: Category | 'All') {
-  const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const terms = searchTerms(query);
   return projects.filter(project => {
-    const searchable = [project.title, project.description, ...project.tags].join(' ').toLowerCase();
-    return (category === 'All' || category === project.category) && terms.every(term => searchable.includes(term));
+    return (category === 'All' || category === project.category) &&
+      matchesSearch([project.title, project.description, ...project.tags], terms);
   });
 }
 
 export function recentResearch(projects: Research[], limit = 6): Research[] {
-  return [...projects].sort((a, b) => b.updated.localeCompare(a.updated) || a.title.localeCompare(b.title)).slice(0, limit);
+  return [...projects].sort(compareRecent).slice(0, limit);
 }

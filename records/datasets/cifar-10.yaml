@@ -1,0 +1,28 @@
+id: cifar-10
+name: CIFAR-10
+institution: University of Toronto
+authors:
+- Alex Krizhevsky
+- Vinod Nair
+- Geoffrey Hinton
+summary: A small-image classification benchmark containing 60,000 color images across ten object categories.
+  Each image has a resolution of 32×32 pixels.
+modality: image
+task: benchmark
+license: unknown
+size: 60,000 images
+splits:
+- 50,000 training images
+- 10,000 test images
+description: The ten categories cover airplanes, automobiles, birds, cats, deer, dogs, frogs, horses,
+  ships, and trucks. Each category contains 6,000 images. The official website offers Python, MATLAB,
+  and binary distributions.
+known_limitations: Low-resolution images and ten fixed categories limit how well results transfer to modern
+  real-world vision tasks. The linked Hub card lists the license as unknown; check the original source
+  before reuse.
+source_url: https://www.cs.toronto.edu/~kriz/cifar.html
+hub_url: https://huggingface.co/datasets/uoft-cs/cifar10
+tags:
+- computer-vision
+- image-classification
+last_updated: '2026-11-11'

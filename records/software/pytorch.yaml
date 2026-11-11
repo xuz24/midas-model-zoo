@@ -1,0 +1,23 @@
+id: pytorch
+name: PyTorch
+summary: A tensor and deep learning framework with automatic differentiation and GPU acceleration. Supports
+  building and training neural networks through a Python interface.
+language: python
+license: bsd-3-clause
+registry: pypi
+package_url: https://pypi.org/project/torch/
+source_url: https://github.com/pytorch/pytorch
+install: pip install torch
+docs_url: https://docs.pytorch.org/docs/stable/
+papers:
+- paszke-2019-pytorch
+models:
+- bert-base-uncased
+- distilbert-base-uncased
+- vit-base-patch16-224
+tags:
+- deep-learning
+- automatic-differentiation
+- gpu
+- scientific-computing
+last_updated: '2026-11-11'

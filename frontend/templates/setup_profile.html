@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_profile.html" import avatar %}
 {% macro field(name, label, placeholder='', limit=255, autocomplete='off') %}
 <div class="profile-field">
   <label for="profile-{{ name }}">{{ label }} {% if name not in ['name', 'username'] %}<span>(optional)</span>{% else %}<span>(required)</span>{% endif %}</label>
@@ -7,18 +8,9 @@
 </div>
 {% endmacro %}
 {% block content %}
-<section class="catalog-hero">
-  <div class="container">
-    <p class="eyebrow">YOUR SPACE IN THE RESEARCH COMMUNITY</p>
-    <div class="catalog-heading"><div>
-      <h1>{{ 'Edit your profile' if editing else 'Make yourself at home' }}<span class="maize-dot">.</span></h1>
-      <p>Introduce yourself and the ideas you’re exploring.</p>
-    </div></div>
-  </div>
-</section>
 <div class="container profile-layout">
   <aside class="profile-sidebar">
-    <div class="profile-avatar" aria-hidden="true">{{ (user.name or 'R')[:1] | upper }}</div>
+    {{ avatar(user) }}
     <h2>A little about you.</h2>
     <p>Your research starts with your perspective. Add your background, interests, and a short introduction.</p>
     <div class="profile-account"><span class="eyebrow">CONNECTED ACCOUNT</span><p>{{ user.email or 'Google account' }}</p><span>Signed in with Google</span></div>
@@ -32,14 +24,35 @@
       <p class="submission-help" id="username-help">Your public profile will be at /user/your_username. Use 3–30 letters, numbers, or underscores, starting with a letter. Usernames are saved in lowercase.</p>
       {{ field('name', 'Full name', 'How should we call you?', autocomplete='name') }}
       <div class="submission-grid">
-        {{ field('institution', 'Institution', 'University of Michigan', autocomplete='organization') }}
+        <div class="profile-field">
+          <label for="profile-institution">University affiliation <span>(optional)</span></label>
+          <select id="profile-institution" name="institution" autocomplete="organization" {% if errors.get('institution') %}aria-invalid="true" aria-describedby="institution-error"{% endif %}>
+            <option value="">Select your university</option>
+            {% for university in university_affiliations %}<option value="{{ university }}" {% if fields.institution == university %}selected{% endif %}>{{ university }}</option>{% endfor %}
+          </select>
+          {% if fields.institution and fields.institution not in university_affiliations %}<p class="submission-help">Previously saved affiliation: {{ fields.institution }}. Select an available university or leave this blank.</p>{% endif %}
+          {% if errors.get('institution') %}<p class="profile-error" id="institution-error">{{ errors.institution }}</p>{% endif %}
+        </div>
         {{ field('role', 'Role', 'Researcher, faculty, student…', autocomplete='organization-title') }}
       </div>
     </fieldset>
     <fieldset>
       <legend><span class="submission-step">02</span> Your research, in your words</legend>
-      {{ field('research_interests', 'Research interests', 'Machine learning, climate science, public health', limit=1000) }}
-      <p class="submission-help" id="interests-help">Separate interests with commas. They’ll appear as tags on your profile.</p>
+      <div class="profile-interest-picker" role="group" aria-labelledby="interests-label" aria-describedby="interests-help{% if errors.get('research_interests') %} research_interests-error{% endif %}">
+        <p id="interests-label" class="profile-interest-label">Research interests <span>(optional)</span></p>
+        <p class="submission-help" id="interests-help">Search and select topics, or type a new topic and choose Other to add it. Select up to 20 interests.</p>
+        <script id="research-interest-data" type="application/json">{{ {'options': research_interest_options, 'selected': selected_interests} | tojson }}</script>
+        <div id="research-interest-picker">
+        <div class="profile-interest-options">
+          {% for interest in research_interest_options | list + custom_interests %}
+          <label class="profile-interest-option"><input type="checkbox" name="research_interests" value="{{ interest }}" {% if interest in selected_interests %}checked{% endif %}><span>{{ interest }}</span></label>
+          {% endfor %}
+        </div>
+        <label for="custom-interest">Other interest <span>(optional)</span></label>
+        <input id="custom-interest" name="custom_interest" maxlength="80" placeholder="Add a topic not listed above">
+        </div>
+        {% if errors.get('research_interests') %}<p class="profile-error" id="research_interests-error">{{ errors.research_interests }}</p>{% endif %}
+      </div>
       <label for="profile-bio">About you <span>(optional)</span></label>
       <textarea id="profile-bio" name="bio" rows="6" maxlength="2000" placeholder="What are you working on? What questions drive your research?" aria-describedby="bio-help{% if errors.get('bio') %} bio-error{% endif %}" {% if errors.get('bio') %}aria-invalid="true"{% endif %}>{{ fields.bio }}</textarea>
       <p class="submission-help" id="bio-help">A short introduction, up to 2,000 characters.</p>

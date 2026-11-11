@@ -1,0 +1,39 @@
+id: wolf-2020-transformers
+title: 'Transformers: State-of-the-Art Natural Language Processing'
+authors:
+- Thomas Wolf
+- Lysandre Debut
+- Victor Sanh
+- Julien Chaumond
+- Clement Delangue
+- Anthony Moi
+- Pierric Cistac
+- Tim Rault
+- Remi Louf
+- Morgan Funtowicz
+- Joe Davison
+- Sam Shleifer
+- Patrick von Platen
+- Clara Ma
+- Yacine Jernite
+- Julien Plu
+- Canwen Xu
+- Teven Le Scao
+- Sylvain Gugger
+- Mariama Drame
+- Quentin Lhoest
+- Alexander Rush
+year: 2020
+venue: 'EMNLP 2020: System Demonstrations'
+doi: 10.18653/v1/2020.emnlp-demos.6
+arxiv_url: https://arxiv.org/abs/1910.03771
+summary: Presents the Transformers library and its shared interfaces for pretrained language models. Describes
+  tools for distributing models and adapting them to downstream tasks.
+models:
+- bert-base-uncased
+- distilbert-base-uncased
+tags:
+- nlp
+- transformers
+- open-source
+last_updated: '2026-11-11'

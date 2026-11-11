@@ -7,7 +7,7 @@ A model entry describes one trained model and links to its datasets and papers. 
 | `id` | Yes | slug | Matches the filename |
 | `name` | Yes | text | Display name |
 | `summary` | Yes | 1 to 2 sentences | Written for the site |
-| `task` | Yes | `text-classification`, `text-generation`, `image-classification`, `object-detection`, `speech-recognition`, `translation`, `other` | Filter field |
+| `task` | Yes | `fill-mask`, `text-classification`, `text-generation`, `image-classification`, `object-detection`, `speech-recognition`, `translation`, `other` | Filter field |
 | `modality` | Yes | `text`, `image`, `audio`, `video`, `tabular`, `multimodal` | Filter field |
 | `framework` | Yes | `pytorch`, `tensorflow`, `jax`, `onnx`, `other` | Filter field |
 | `license` | Yes | SPDX identifier or `custom` | |
