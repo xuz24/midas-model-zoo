@@ -10,6 +10,13 @@ RECORDS_ROOT = Path(__file__).resolve().parents[2] / "records"
 KINDS = ("models", "datasets", "papers", "software")
 
 
+def author_username(author):
+    """Recognize explicit account credits; ordinary author names stay unlinked."""
+    if isinstance(author, str) and re.fullmatch(r'@[a-zA-Z][a-zA-Z0-9_]{2,29}', author):
+        return author[1:].lower()
+    return None
+
+
 def safe_url(value):
     if not isinstance(value, str):
         return None
@@ -39,6 +46,9 @@ def load_records(kind):
             for field in ('authors', 'tags', 'models', 'datasets', 'papers', 'languages'):
                 if field in record and (not isinstance(record[field], list) or not all(isinstance(v, str) for v in record[field])):
                     raise ValueError(f"{field} must be a list of strings")
+            for author in record.get('authors', []):
+                if author.startswith('@') and not author_username(author):
+                    raise ValueError("Author usernames must use @ followed by a valid researcher username")
             # Convert YAML dates and other scalars into JSON/template-safe values.
             record = {key: value.isoformat() if isinstance(value, date) else value for key, value in record.items()}
             seen.add(record['id'])
@@ -77,6 +87,21 @@ def research_entries():
             for kind in KINDS for entry in catalog_entries(kind)]
 
 
+def researcher_records(username):
+    """Find explicit username credits across catalogs without matching names."""
+    groups = []
+    for kind in KINDS:
+        records = [record for record in load_records(kind)
+                   if username.lower() in {author_username(author) for author in record.get('authors', [])}]
+        records.sort(key=lambda record: (-date.fromisoformat(record['last_updated']).toordinal(), record.get('title', record.get('name', '')).casefold()))
+        if records:
+            groups.append(dict(kind=kind, label=kind.capitalize(), records=[
+                dict(title=record.get('title', record.get('name')), summary=record['summary'],
+                     updated=record['last_updated'], url=f"/{kind}/{record['id']}")
+                for record in records]))
+    return groups
+
+
 def record_details(kind, record):
     """Render all supplied fields, resolving known cross-record references."""
     rows = []
@@ -94,6 +119,10 @@ def record_details(kind, record):
                 target = related[target_kind][label]
                 link = f"/{target_kind}/{label}"
                 label = target.get('title', target.get('name', label))
+            elif key == 'authors' and author_username(label):
+                username = author_username(label)
+                label = '@' + username
+                link = f'/user/{username}'
             elif key == 'doi':
                 link = 'https://doi.org/' + quote(label, safe='/')
             cells.append(dict(label=label, url=link))

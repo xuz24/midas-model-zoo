@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_profile.html" import identity, biography, research_interests %}
+{% from "_profile.html" import identity, biography, research_interests, account_email %}
 {% block content %}
 <div class="container profile-content">
   <a class="profile-directory-link" href="{{ url_for('users.directory') }}">← Explore researchers</a>
@@ -7,13 +7,28 @@
   <div class="profile-layout">
     {% call identity(user) %}
       {% if is_owner %}
-      <div class="profile-account"><span class="eyebrow">ACCOUNT EMAIL</span><p>{{ user.email or 'No email available' }}</p></div>
+      {{ account_email(user) }}
       <a class="button button-primary profile-edit-button" href="{{ url_for('users.setup_profile', edit='1') }}">Edit profile <span aria-hidden="true">↗</span></a>
       {% endif %}
     {% endcall %}
     <div class="profile-details">
       {% call biography(user, 'About me' if is_owner else 'About') %}{% if is_owner %}<p class="profile-empty">Every research journey has a story. Add a short bio to share yours.</p><a class="profile-text-link" href="{{ url_for('users.setup_profile', edit='1') }}#profile-bio">Add an introduction →</a>{% else %}<p class="profile-empty">This researcher hasn’t added an introduction yet.</p>{% endif %}{% endcall %}
       {% call research_interests(interests) %}{% if is_owner %}<p class="profile-empty">What are you curious about? Add the topics that shape your work.</p><a class="profile-text-link" href="{{ url_for('users.setup_profile', edit='1') }}#profile-research_interests">Add research interests →</a>{% else %}<p class="profile-empty">No research interests added yet.</p>{% endif %}{% endcall %}
+      <section class="profile-card" aria-labelledby="profile-research-title">
+        <h2 id="profile-research-title">Research</h2>
+        {% for group in research_groups %}
+        <div class="profile-research-group">
+          <h3>{{ group.label }} <span>({{ group.records | length }})</span></h3>
+          <ul class="profile-research-list">
+            {% for record in group.records %}
+            <li><h4><a href="{{ record.url }}">{{ record.title }} <span aria-hidden="true">↗</span></a></h4><p>{{ record.summary }}</p><small>Updated <time datetime="{{ record.updated }}">{{ record.updated }}</time></small></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% else %}
+        <p class="profile-empty">{% if is_owner %}Research that credits @{{ user.username }} will appear here.{% else %}No research credits yet.{% endif %}</p>
+        {% endfor %}
+      </section>
       <div class="profile-explore"><div><h2>Find your next connection.</h2><p>Explore work from across the research community.</p></div><a class="button button-secondary" href="{{ url_for('home') }}#explore">Explore research <span aria-hidden="true">→</span></a></div>
     </div>
   </div>

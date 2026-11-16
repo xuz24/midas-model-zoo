@@ -31,6 +31,7 @@ case "${1:-}" in
     "$PYTHON" -c 'import flask, yaml'
     cd "$ROOT"
     npm --prefix frontend run build
+    "$PYTHON" -m flask --app "$ROOT/backend/app" prepare-demo
     mkdir -p "$RUN_DIR"
     # Disable the reloader so the recorded PID owns the server directly.
     nohup "$PYTHON" -m flask --app "$ROOT/backend/app" run \

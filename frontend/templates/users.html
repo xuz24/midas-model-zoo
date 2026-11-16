@@ -1,25 +1,40 @@
 {% extends "base.html" %}
-{% from "_profile.html" import avatar %}
+{% from "_profile.html" import avatar, interest_tags %}
+{% from "_filters.html" import filter_links %}
 {% block content %}
-<section class="container researcher-directory" aria-labelledby="researchers-title">
-  <header class="researcher-directory-header">
-    <p class="eyebrow">THE RESEARCH COMMUNITY</p>
-    <h1 id="researchers-title">Explore researchers<span class="maize-dot">.</span></h1>
-    <p>Find people, discover shared interests, and explore the community.</p>
-  </header>
-  <form class="researcher-search" action="{{ url_for('users.directory') }}" method="get" role="search">
-    <label for="researcher-query">Search researchers</label>
-    <div class="researcher-search-controls">
-      <input id="researcher-query" type="search" name="q" value="{{ query }}" maxlength="200" placeholder="Name, username, university, or research interest" aria-describedby="researcher-search-help">
-      <button class="button button-primary" type="submit">Search</button>
-      {% if query %}<a class="profile-text-link" href="{{ url_for('users.directory') }}">Clear search</a>{% endif %}
+<section class="container model-catalog" aria-labelledby="researchers-title">
+  <div class="catalog-explorer-layout">
+  <header class="model-results-heading">
+    <div id="researcher-catalog-heading" data-query="{{ query }}" data-total="{{ total }}" data-directory-total="{{ directory_total }}" data-sort="{{ sort }}" data-filters="{{ selected_filters | tojson | forceescape }}">
+    <form id="researcher-fallback-search" class="catalog-heading-line" action="{{ url_for('users.directory') }}" method="get" role="search">
+      <div class="catalog-heading-title">
+        <h1 id="researchers-title">Researchers<span class="maize-dot">.</span></h1>
+        <span class="catalog-heading-count" role="status" aria-label="{{ total }} researcher{{ '' if total == 1 else 's' }}{% if query %} matching “{{ query }}”{% endif %}">{{ total }} of {{ directory_total }}</span>
+      </div>
+        <div class="catalog-heading-search">
+          <div class="search-field">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+            <label class="sr-only" for="researcher-query">Search researchers by name, username, university, or research interest</label>
+            <input id="researcher-query" type="search" name="q" value="{{ query }}" maxlength="200" placeholder="Search researchers…" aria-describedby="researcher-search-help">
+          </div>
+        </div>
+        <label class="catalog-sort">Sort by <select name="sort"><option value="name" {% if sort == 'name' %}selected{% endif %}>Name (A–Z)</option><option value="joined" {% if sort == 'joined' %}selected{% endif %}>Recently joined</option></select></label>
+        {% for key, value in selected_filters.items() %}{% if value %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endif %}{% endfor %}
+        <button class="sr-only" type="submit">Search</button>
+    </form>
+    <noscript><button class="button button-secondary" type="submit" form="researcher-fallback-search">Apply search and sort</button></noscript>
     </div>
-    <p id="researcher-search-help">Search names, affiliations, roles, biographies, and interest tags.</p>
-  </form>
-  <p class="researcher-result-count" role="status">{{ total }} researcher{{ '' if total == 1 else 's' }}{% if query %} matching “{{ query }}”{% endif %}</p>
-  <div class="researcher-grid">
+    <span class="sr-only" id="researcher-search-help">Search names, affiliations, roles, biographies, and interest tags. Press Enter to search.</span>
+  </header>
+  <aside class="catalog-filter-sidebar" aria-label="Filter researchers">
+    <h2>Filters</h2>
+    {% for group in filter_groups %}{{ filter_links(group, selected_filters[group.key], directory_total, directory_url) }}{% endfor %}
+    {% if has_filters %}<a class="catalog-filter-reset" href="{{ url_for('users.directory') }}">Clear filters</a>{% endif %}
+  </aside>
+  <div class="catalog-results">
+  <div class="model-grid">
     {% for researcher in researchers %}
-    <article class="researcher-card">
+    <article class="model-card researcher-card">
       <div class="researcher-card-identity">
         {{ avatar(researcher) }}
         <div><h2><a href="{{ url_for('users.user', username=researcher.username) }}">{{ researcher.name or researcher.username }}</a></h2><p>@{{ researcher.username }}</p></div>
@@ -27,23 +42,25 @@
       {% if researcher.role %}<p class="researcher-card-role">{{ researcher.role }}</p>{% endif %}
       {% if researcher.institution %}<p class="researcher-card-affiliation">{{ researcher.institution }}</p>{% endif %}
       {% if researcher.bio %}<p class="researcher-card-bio">{{ researcher.bio | truncate(180) }}</p>{% endif %}
-      {% if researcher.interest_list %}<ul class="profile-tags" aria-label="Research interests">{% for interest in researcher.interest_list[:4] %}<li>{{ interest }}</li>{% endfor %}{% if researcher.interest_list | length > 4 %}<li>+{{ researcher.interest_list | length - 4 }} more</li>{% endif %}</ul>{% endif %}
-      <a class="researcher-profile-link" href="{{ url_for('users.user', username=researcher.username) }}" aria-label="View {{ researcher.name or researcher.username }}’s profile">View profile <span aria-hidden="true">→</span></a>
+      {% if researcher.interest_list %}{{ interest_tags(researcher.interest_list, 4) }}{% endif %}
+      <a class="model-card-footer researcher-profile-link" href="{{ url_for('users.user', username=researcher.username) }}" aria-label="View {{ researcher.name or researcher.username }}’s profile">View profile <span aria-hidden="true">→</span></a>
     </article>
     {% else %}
-    <div class="researcher-empty">
-      <h2>{{ 'No researchers found' if query else 'The community is growing' }}</h2>
-      <p>{{ 'Try a different name or a broader research topic.' if query else 'Researcher profiles will appear here as people join.' }}</p>
-      {% if query %}<a class="button button-secondary" href="{{ url_for('users.directory') }}">Browse all researchers</a>{% endif %}
+    <div class="empty-state catalog-empty">
+      <h2>{{ 'No researchers found' if has_filters else 'The community is growing' }}</h2>
+      <p>{{ 'Try a different name or clear your filters.' if has_filters else 'Researcher profiles will appear here as people join.' }}</p>
+      {% if has_filters %}<a class="button button-secondary" href="{{ url_for('users.directory') }}">Browse all researchers</a>{% endif %}
     </div>
     {% endfor %}
   </div>
   {% if pages > 1 %}
   <nav class="researcher-pagination" aria-label="Researcher pages">
-    {% if page > 1 %}<a class="button button-secondary" href="{{ url_for('users.directory', q=query, page=page-1) }}">← Previous</a>{% endif %}
+    {% if page > 1 %}<a class="button button-secondary" href="{{ directory_url(page=page-1) }}">← Previous</a>{% endif %}
     <span>Page {{ page }} of {{ pages }}</span>
-    {% if page < pages %}<a class="button button-secondary" href="{{ url_for('users.directory', q=query, page=page+1) }}">Next →</a>{% endif %}
+    {% if page < pages %}<a class="button button-secondary" href="{{ directory_url(page=page+1) }}">Next →</a>{% endif %}
   </nav>
   {% endif %}
+  </div>
+  </div>
 </section>
 {% endblock %}

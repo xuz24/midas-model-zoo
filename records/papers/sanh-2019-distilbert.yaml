@@ -6,7 +6,7 @@ authors:
 - Julien Chaumond
 - Thomas Wolf
 year: 2019
-venue: NeurIPS 2019 EMC² Workshop
+venue: NeurIPS EMC² Workshop
 arxiv_url: https://arxiv.org/abs/1910.01108
 summary: Studies knowledge distillation during language model pretraining to produce a smaller BERT-style
   encoder. Evaluates its efficiency and performance on language understanding tasks.

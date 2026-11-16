@@ -6,7 +6,7 @@ authors:
 - Kenton Lee
 - Kristina Toutanova
 year: 2019
-venue: NAACL-HLT 2019
+venue: NAACL-HLT
 doi: 10.18653/v1/N19-1423
 arxiv_url: https://arxiv.org/abs/1810.04805
 summary: Introduces bidirectional transformer pretraining using masked tokens and sentence pairs. The

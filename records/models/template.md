@@ -12,7 +12,7 @@ A model entry describes one trained model and links to its datasets and papers. 
 | `framework` | Yes | `pytorch`, `tensorflow`, `jax`, `onnx`, `other` | Filter field |
 | `license` | Yes | SPDX identifier or `custom` | |
 | `last_updated` | Yes | date | |
-| `authors` | No | list of people | Individual people, not teams |
+| `authors` | No | list of names or quoted `@username` strings | Username credits link to researcher profiles and populate their research lists. |
 | `institution` | No | text | |
 | `base_model` | No | model id | Model this was fine-tuned from |
 | `datasets` | No | list of dataset ids | |

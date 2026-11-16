@@ -1,0 +1,13 @@
+id: demo-lake-observations
+name: Great Lakes Sensor Observations (Demo)
+summary: Fictional dataset entry for temperature, rainfall, and water quality observations, illustrating a shared research dataset. No real sensor measurements or download are provided.
+description: This sample catalog entry demonstrates discovery, contributor credits, and links to related research without requiring an external service.
+task: evaluation
+modality: tabular
+license: unknown
+authors: ['@demo_maya', '@demo_jordan', '@demo_priya']
+models: [demo-lake-forecast]
+papers: [demo-2026-lake-forecast]
+tags: [demo, climate, water-quality]
+known_limitations: Fictional demonstration entry; no data file of observations is available.
+last_updated: '2026-11-14'

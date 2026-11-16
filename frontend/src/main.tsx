@@ -6,6 +6,7 @@ import { modelCatalogEntry, type CatalogEntry } from './catalog';
 import { ResearchCarousel } from './components/ResearchCarousel';
 import './styles.css';
 import { ResearchInterestPicker } from './components/ResearchInterestPicker';
+import { ResearcherSearch } from './components/ResearcherSearch';
 
 const researchKind = document.querySelector<HTMLSelectElement>('#research-kind');
 if (researchKind) {
@@ -44,6 +45,13 @@ if (catalogExplorer && catalogData && (kind === 'models' || kind === 'datasets' 
 }
 
 const interestPicker = document.getElementById('research-interest-picker');
+const researcherSearch = document.getElementById('researcher-catalog-heading');
+if (researcherSearch) {
+  createRoot(researcherSearch).render(<ResearcherSearch initialQuery={researcherSearch.dataset.query || ''}
+    total={Number(researcherSearch.dataset.total)} directoryTotal={Number(researcherSearch.dataset.directoryTotal)}
+    initialSort={researcherSearch.dataset.sort || 'name'} filters={JSON.parse(researcherSearch.dataset.filters || '{}')}/>);
+}
+
 const interestData = document.getElementById('research-interest-data');
 if (interestPicker && interestData) {
   const data = JSON.parse(interestData.textContent || '{}');

@@ -23,7 +23,7 @@ authors:
 - Junjie Bai
 - Soumith Chintala
 year: 2019
-venue: NeurIPS 2019
+venue: NeurIPS
 arxiv_url: https://arxiv.org/abs/1912.01703
 summary: Explains the design of PyTorch as an imperative deep learning library. Describes how automatic
   differentiation, tensor operations, and accelerator support combine with Python programming.

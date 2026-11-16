@@ -1,0 +1,11 @@
+id: demo-2026-lake-forecast
+title: Collaborative Forecasting for Great Lakes Water Quality (Demo)
+summary: Fictional paper illustrating collaboration between environmental science, machine learning, and public health. This is a demo entry, not a published study.
+authors: ['@demo_maya', '@demo_jordan', '@demo_priya']
+year: 2026
+venue: Demo Research Showcase
+models: [demo-lake-forecast]
+datasets: [demo-lake-observations]
+tags: [demo, climate, water-quality]
+license: unknown
+last_updated: '2026-11-13'

@@ -14,7 +14,7 @@ authors:
 - Jakob Uszkoreit
 - Neil Houlsby
 year: 2021
-venue: ICLR 2021
+venue: ICLR
 arxiv_url: https://arxiv.org/abs/2010.11929
 summary: Applies a transformer directly to sequences of image patches for classification. Shows how large-scale
   pretraining enables transfer to image recognition benchmarks.

@@ -16,7 +16,7 @@
     <style>.loading-placeholder { display:none; }</style>
     <h1>{{ catalog_title }}</h1>
     <p>Enable JavaScript to search, filter, and sort the catalog.</p>
-    <ul>{% for entry in entries %}<li><a href="{{ entry.detail_url }}">{{ entry.title }}</a> — {{ entry.owner }} · {{ entry.task if kind == 'models' else entry.category }}<p>{{ entry.description }}</p></li>{% else %}<li>No {{ kind }} available yet.</li>{% endfor %}</ul>
+    <ul>{% for entry in entries %}<li><a href="{{ entry.detail_url }}">{{ entry.title }}</a> · {{ entry.task if kind == 'models' else entry.category }}<p>{{ entry.description }}</p></li>{% else %}<li>No {{ kind }} available yet.</li>{% endfor %}</ul>
   </noscript>
 </section>
 {% endblock %}

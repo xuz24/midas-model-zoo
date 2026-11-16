@@ -1,0 +1,12 @@
+id: demo-lake-toolkit
+name: Lake Research Toolkit (Demo)
+summary: Fictional Python toolkit entry showing how a reusable research package connects datasets, models, and papers. No installable package is provided.
+language: python
+registry: other
+license: unknown
+authors: ['@demo_priya', '@demo_taylor']
+models: [demo-lake-forecast]
+datasets: [demo-lake-observations]
+papers: [demo-2026-lake-forecast]
+tags: [demo, climate, reproducibility]
+last_updated: '2026-11-12'

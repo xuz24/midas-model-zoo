@@ -30,6 +30,43 @@ After frontend changes, run `npm --prefix frontend run build`, or run
 `npm --prefix frontend run watch` in another terminal for continuous rebuilds.
 Refresh the browser after edits. Flask serves all routes and compiled assets.
 
+## Stakeholder demo
+
+After the one-time setup above, update and start the demo with:
+
+```sh
+git pull
+bin/app restart
+```
+
+Startup builds the frontend, applies database migrations, and automatically loads
+six fictional researcher profiles from `demo/researchers.yaml`. No seed command,
+database copy, Google credentials, or `.env` file is needed for browsing. Existing
+accounts and profile edits are preserved on subsequent starts. Without a configured
+`FLASK_SECRET_KEY`, sessions last until the server restarts; set a stable secret
+and `GOOGLE_CLIENT_ID` when configuring real sign-in.
+
+Suggested walkthrough:
+
+1. Open http://localhost:5001 and search for `demo` to find the sample research.
+2. Open **Great Lakes Water Quality Forecast (Demo)**, then follow its dataset
+   and paper links.
+3. Click `@demo_maya` to see research credits grouped by catalog on a profile.
+4. Open `/users` and try the Climate science tag, Professor role, name search,
+   and recently joined sorting. Visit `@demo_priya` for all four research types.
+
+The four sample research entries live in `records/*/demo-*.yaml` and refresh when
+the browser reloads. All sample people and projects are explicitly labeled as
+fictional; they make no claims about actual university research. Their detail
+pages work without GitHub requests. These profiles support public browsing, not
+demo sign-in or profile editing.
+
+Set `DEMO_DATA=0` in the environment or `.env` to disable automatic migrations and
+profile seeding at startup. This does not remove profiles already loaded or hide
+the YAML catalog entries. For a deployment without sample content, remove the
+`demo-*.yaml` records and seeded `demo_*` profiles as well. Profile fixture changes
+apply to newly inserted accounts; existing profiles are never overwritten.
+
 ## Reset the database
 
 Run `bin/db reset` to delete all tables and data in the configured database and
@@ -43,6 +80,8 @@ bin/db reset
 bin/app start
 ```
 
+The next app start restores the fictional demo profiles unless `DEMO_DATA=0`.
+
 ## Editing records
 
 Add or edit `.yaml` or `.yml` files inside `records/models`, `records/datasets`,
@@ -53,6 +92,22 @@ not a frontend rebuild. IDs determine URLs, so filenames may contain spaces.
 Every record needs a unique lowercase slug `id` within its catalog, a `name`
 (`title` for papers), `summary`, and an ISO `last_updated` date (`YYYY-MM-DD`).
 Optional authors, tags, languages, and related records must be lists of strings.
+Authors can mix full names and quoted `@username` credits:
+
+```yaml
+authors:
+  - Alex Smith
+  - '@researcher'
+```
+
+Username credits link to `/user/researcher` and automatically list the record in
+that researcher's profile under Models, Datasets, Papers, or Software. Matches
+are case-insensitive and require the full username; ordinary names are not matched
+to accounts. Profiles reflect record edits on refresh, with the newest reviewed
+records first in each group. Use the researcher's current username; update credits
+if an account changes its username. Credits for accounts that have not registered
+yet still load, but their profile links return 404 until the account exists.
+
 Missing contributors are labeled “Contributor not specified”; no affiliation or
 publication type is inferred. Malformed records fail with the source filename
 and a validation message rather than silently disappearing.
@@ -69,6 +124,12 @@ Filters use the available record fields:
 - Datasets: task and modality.
 - Papers: venue and year.
 - Software: registry and language.
+
+The homepage research grid and all four catalogs show 24 records per page, with
+Previous/Next controls and a visible result range when there is more than one
+page. Search and filters apply to the full collection before pagination. Changing
+search, filters, or sort order returns to page one. Catalog pagination runs in the
+browser and resets on refresh; the researcher directory uses `?page=` links.
 
 The homepage combines all four catalogs. Search, sorting, and empty states work
 without a database. The `/submit` page previews the research submission fields;
@@ -111,6 +172,10 @@ README. The backend uses GitHub's repository and README REST endpoints
 (https://docs.github.com/en/rest/repos). Successful responses are cached in each
 server process for 15 minutes; failures are cached for one minute. GitHub outages,
 rate limits, and missing READMEs leave the catalog record accessible.
+README rendering preserves validated image dimensions, image alignment, and
+paragraph/div/table-cell alignment. Images are constrained to the content width.
+Arbitrary inline styles, scripts, and event handlers are removed; the site applies
+its own typography, so rendering may still differ from GitHub.
 Optionally set `GITHUB_TOKEN` in the server environment to increase API rate
 limits. The token is used only by the backend. Install the updated
 `requirements.txt` before starting the server.

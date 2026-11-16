@@ -1,0 +1,15 @@
+id: demo-lake-forecast
+name: Great Lakes Water Quality Forecast (Demo)
+summary: Fictional model illustrating how researchers could forecast water quality from environmental sensor readings. Demo only; no trained model or measured results are provided.
+description: Follow this sample project from its dataset to its forecasting model, research paper, and reusable software. All entries and researcher profiles in this collaboration are fictional.
+task: time-series-forecasting
+modality: tabular
+framework: pytorch
+license: unknown
+authors: ['@demo_maya', '@demo_priya']
+institution: University of Michigan
+datasets: [demo-lake-observations]
+papers: [demo-2026-lake-forecast]
+tags: [demo, climate, water-quality]
+known_limitations: Illustrative metadata only. Not suitable for environmental or public health decisions.
+last_updated: '2026-11-15'

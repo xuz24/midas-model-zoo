@@ -11,7 +11,7 @@
     <h2>{{ user.name or 'Researcher' }}</h2>
     <p>@{{ user.username }}</p>
     <p class="profile-role">{{ user.role or 'Research community member' }}</p>
-    {% if user.institution %}<div class="profile-affiliation"><span class="eyebrow">University affiliation</span><p>{{ user.institution }}</p></div>{% endif %}
+    {% if user.institution %}<div class="profile-affiliation" role="group" aria-label="University affiliation"><p>{{ user.institution }}</p></div>{% endif %}
     {% if caller is defined %}{{ caller() }}{% endif %}
     {% if user.created_at %}<p class="profile-hint">Member since {{ user.created_at.strftime('%B %Y') }}</p>{% endif %}
   </aside>
@@ -19,14 +19,22 @@
 
 {% macro biography(user, heading) -%}
   <section class="profile-card">
-    <p class="eyebrow">INTRODUCTION</p><h2>{{ heading }}</h2>
+    <h2>{{ heading }}</h2>
     {% if user.bio %}<p class="profile-bio">{{ user.bio }}</p>{% else %}{{ caller() }}{% endif %}
   </section>
 {%- endmacro %}
 
 {% macro research_interests(interests) -%}
   <section class="profile-card">
-    <p class="eyebrow">AREAS OF EXPLORATION</p><h2>Research interests</h2>
-    {% if interests %}<ul class="profile-tags">{% for interest in interests %}<li>{{ interest }}</li>{% endfor %}</ul>{% else %}{{ caller() }}{% endif %}
+    <h2>Research interests</h2>
+    {% if interests %}{{ interest_tags(interests) }}{% else %}{{ caller() }}{% endif %}
   </section>
+{%- endmacro %}
+
+{% macro interest_tags(interests, limit=none) -%}
+  <ul class="profile-tags" aria-label="Research interests">{% for interest in (interests[:limit] if limit is not none else interests) %}<li>{{ interest }}</li>{% endfor %}{% if limit is not none and interests | length > limit %}<li>+{{ interests | length - limit }} more</li>{% endif %}</ul>
+{%- endmacro %}
+
+{% macro account_email(user, label='Account email') -%}
+  <div class="profile-account"><span class="profile-account-label">{{ label }}</span><p>{{ user.email or 'No email available' }}</p><span>Only visible to you</span></div>
 {%- endmacro %}

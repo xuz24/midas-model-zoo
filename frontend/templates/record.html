@@ -10,7 +10,7 @@
       <div class="record-header-copy">
         <p class="record-type">{{ kind[:-1] if kind != 'software' else 'software' }}</p>
         <h1>{{ title }}</h1>
-        <p class="record-byline">{% if record.institution %}{{ record.institution }}<span class="record-byline-dot">·</span>{% elif record.authors %}{{ record.authors | join(', ') }}<span class="record-byline-dot">·</span>{% elif record.venue %}{{ record.venue }}<span class="record-byline-dot">·</span>{% elif record.registry %}{{ record.registry }}<span class="record-byline-dot">·</span>{% endif %}Updated <time datetime="{{ record.last_updated }}">{{ record.last_updated }}</time></p>
+        <p class="record-byline">{% if record.institution %}{{ record.institution }}<span class="record-byline-dot">·</span>{% elif author_values %}{% for author in author_values %}{% if author.url %}<a href="{{ author.url }}">{{ author.label }}</a>{% else %}{{ author.label }}{% endif %}{{ ', ' if not loop.last }}{% endfor %}<span class="record-byline-dot">·</span>{% elif record.venue %}{{ record.venue }}<span class="record-byline-dot">·</span>{% elif record.registry %}{{ record.registry }}<span class="record-byline-dot">·</span>{% endif %}Updated <time datetime="{{ record.last_updated }}">{{ record.last_updated }}</time></p>
       </div>
     </header>
 

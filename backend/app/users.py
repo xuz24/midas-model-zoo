@@ -9,6 +9,7 @@ from .auth import sign_in_user
 from .database import db
 from .db_models import User
 from .profile_options import UNIVERSITY_AFFILIATIONS, RESEARCH_INTERESTS
+from .records import researcher_records
 
 users_bp = Blueprint("users", __name__)
 
@@ -23,8 +24,36 @@ def current_user():
 @users_bp.get("/users")
 def directory():
     query = request.args.get("q", "").strip()[:200]
+    sort = 'joined' if request.args.get('sort') == 'joined' else 'name'
+    selected = {key: request.args.get(key, '').strip()[:255] for key in ('tag', 'institution', 'role')}
+    # Only public metadata is needed to build facets and match whole interest tags.
+    metadata = db.session.execute(db.select(User.username, User.institution, User.role, User.research_interests)).all()
+    facets = {key: {} for key in selected}
+    tagged_users = []
+    for username, institution, role, interests in metadata:
+        tags = {tag.strip() for tag in (interests or '').split(',') if tag.strip()}
+        if selected['tag'].casefold() in {tag.casefold() for tag in tags}:
+            tagged_users.append(username)
+        for key, values in (('tag', tags), ('institution', [institution]), ('role', [role])):
+            for value in {value.strip().casefold(): value.strip() for value in values if value and value.strip()}.values():
+                option = facets[key].setdefault(value.casefold(), dict(value=value, count=0))
+                option['count'] += 1
+    for key, value in selected.items():
+        if value:
+            facets[key].setdefault(value.casefold(), dict(value=value, count=0))
+
+    def directory_url(**changes):
+        params = dict(q=query, **selected, sort=sort if sort != 'name' else '')
+        params.update(changes)
+        return url_for('users.directory', **{key: value for key, value in params.items() if value})
+
     page = max(1, request.args.get("page", 1, type=int))
     statement = db.select(User)
+    if selected['tag']:
+        statement = statement.where(User.username.in_(tagged_users))
+    for key, column in (('institution', User.institution), ('role', User.role)):
+        if selected[key]:
+            statement = statement.where(func.lower(func.trim(column)) == selected[key].lower())
     if query:
         statement = statement.where(or_(*[
             column.icontains(query, autoescape=True) for column in
@@ -34,10 +63,17 @@ def directory():
     per_page = 24
     pages = max(1, ceil(total / per_page))
     page = min(page, pages)
-    researchers = db.session.execute(statement.order_by(
-        func.lower(func.coalesce(User.name, User.username)), User.username
-    ).offset((page - 1) * per_page).limit(per_page)).scalars().all()
+    ordering = [func.lower(func.coalesce(User.name, User.username)), User.username]
+    if sort == 'joined':
+        ordering.insert(0, User.created_at.desc())
+    researchers = db.session.execute(statement.order_by(*ordering)
+                                    .offset((page - 1) * per_page).limit(per_page)).scalars().all()
     return render_template("users.html", researchers=researchers, query=query,
+                           selected_filters=selected, filter_groups=[dict(key=key, label=label,
+                           options=sorted(facets[key].values(), key=lambda option: option['value'].casefold()))
+                           for key, label in (('tag', 'Tags'), ('institution', 'Institutions'), ('role', 'Roles'))],
+                           directory_url=directory_url, directory_total=len(metadata), sort=sort,
+                           has_filters=bool(query or any(selected.values())),
                            total=total, page=page, pages=pages,
                            title="Researchers | Michigan Research Hub")
 
@@ -59,6 +95,7 @@ def user(username):
     if username != user.username:
         return redirect(url_for("users.user", username=user.username), code=301)
     return render_template("profile.html", user=user, interests=user.interest_list,
+                           research_groups=researcher_records(user.username),
                            is_owner=session.get("username") == user.username,
                            title=f"{user.name or 'Researcher'} | Michigan Research Hub")
 

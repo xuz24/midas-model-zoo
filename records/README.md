@@ -26,3 +26,19 @@ Dataset sources added on 2026-11-11:
 Sizes for these entries describe example counts rather than download sizes.
 IMDb has custom usage terms. CIFAR-10's Hub card marks its license as unknown;
 the catalog preserves that uncertainty instead of assigning an open license.
+
+Software and published AI papers added on 2026-11-14:
+
+- photosearcher: https://github.com/ropensci-archive/photosearcher/blob/master/DESCRIPTION and https://doi.org/10.1016/j.softx.2020.100624
+- viewscape: https://CRAN.R-project.org/package=viewscape and https://doi.org/10.1016/j.softx.2024.101662
+- PPGISr: https://github.com/GLISA-umich/PPGISr and https://doi.org/10.1016/j.softx.2023.101389
+- bifrost: https://CRAN.R-project.org/package=bifrost and https://jakeberv.com/bifrost/
+- Fox et al.: https://researchportal.helsinki.fi/en/publications/balancing-accessibility-and-security-safeguarding-citizen-sourced/ and https://doi.org/10.1016/j.ecoinf.2025.103443
+- East et al.: https://doi.org/10.1111/2041-210X.70140
+- Jones et al.: https://doi.org/10.1175/BAMS-D-24-0304.1
+
+photosearcher is archived; its original documentation link returned HTTP 404
+when reviewed. viewscape's original land-info-lab repository points to
+billbillbilly/viewscape, which is also the repository listed by CRAN. Its entry
+uses that current source and retains the original repository as a separate link.
+SoftwareX publications are linked directly from the software entries.

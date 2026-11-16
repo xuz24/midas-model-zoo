@@ -1,0 +1,14 @@
+id: fox-2025-biodiversity-data-security
+title: 'Balancing accessibility and security: Safeguarding citizen-sourced biodiversity data in the age of AI and open-sourced software'
+authors:
+- Nathan Fox
+- Enrico Di Minin
+- Neil Carter
+- Sabina Tomkins
+- Derek Van Berkel
+year: 2025
+venue: Ecological Informatics
+doi: 10.1016/j.ecoinf.2025.103443
+summary: Examines how AI and open-source tools expand access to citizen-science biodiversity records while increasing opportunities for misuse. Discusses researchers' responsibilities for protecting sensitive species data.
+tags: [artificial-intelligence, biodiversity, citizen-science, data-ethics, data-security]
+last_updated: '2026-11-14'

@@ -1,0 +1,12 @@
+id: ppgisr
+name: PPGISr
+summary: R package and Shiny application for public participatory GIS. Provides configurable maps, basemaps, and mapping categories for collecting participants' spatial priorities in planning and research.
+language: r
+license: MIT
+source_url: https://github.com/GLISA-umich/PPGISr
+app_url: https://derek-van-berkel-shiny.shinyapps.io/PPGISr/
+install: remotes::install_github("GLISA-umich/PPGISr")
+papers:
+- https://doi.org/10.1016/j.softx.2023.101389
+tags: [r, shiny, geospatial, participatory-gis, planning]
+last_updated: '2026-11-14'

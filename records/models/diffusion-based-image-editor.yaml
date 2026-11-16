@@ -5,7 +5,9 @@ task: Image generation
 modality: images
 framework: pytorch
 license: apache-2.0
-authors: [Zijie Xu]
+authors: 
+  - Zijie Xu
+  - '@xuzijie'
 institution: University of Michigan
 base_model: null
 source_url: https://github.com/xuz24/nl_image_editor

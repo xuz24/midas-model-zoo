@@ -15,7 +15,6 @@
 {% block content %}
 <section class="catalog-hero">
   <div class="container">
-    <p class="eyebrow">SHARE YOUR WORK</p>
     <div class="catalog-heading"><div><h1>Submit research<span class="maize-dot">.</span></h1>
       <p>Help the Michigan research community discover your models, datasets, papers, and software.</p>
     </div></div>
@@ -96,8 +95,8 @@
     <fieldset>
       <legend><span class="submission-step">03</span> People behind the research</legend>
       <label for="research-authors">Authors and contributors</label>
-      <p class="submission-help" id="authors-help">List the people who contributed to this work, separated by commas.</p>
-      <input id="research-authors" name="authors" type="text" aria-describedby="authors-help">
+      <p class="submission-help" id="authors-help">List names or @usernames, separated by commas. Username credits link to researcher profiles and show this work on those profiles.</p>
+      <input id="research-authors" name="authors" type="text" placeholder="e.g. Alex Smith, @researcher" aria-describedby="authors-help">
       <label for="research-affiliation">Lab, department, or institution <span>(optional)</span></label>
       <input id="research-affiliation" name="institution" type="text" placeholder="Your research affiliation">
     </fieldset>
@@ -107,7 +106,6 @@
     </div>
   </section>
   <aside class="submission-guide" aria-labelledby="submission-guide-title">
-    <p class="eyebrow">BEFORE YOU BEGIN</p>
     <h2 id="submission-guide-title">Make your work discoverable.</h2>
     <p>A clear description and a reliable link help other researchers understand and build on your work.</p>
     <h3>What can you share?</h3>

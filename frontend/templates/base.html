@@ -7,7 +7,7 @@
   <title>{{ title }}</title>
   {% for css in assets.get('css', []) %}<link rel="stylesheet" href="{{ url_for('static', filename='dist/' ~ css) }}">{% endfor %}
   <script type="module" src="{{ url_for('static', filename='dist/' ~ assets.file) }}"></script>
-  <script src="https://accounts.google.com/gsi/client" async></script>
+  {% if google_client_id %}<script src="https://accounts.google.com/gsi/client" async></script>{% endif %}
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -25,11 +25,11 @@
       </nav>
       <div class="header-account">
         {% if session.get('username') or session.get('pending_user') %}
-        <a class="account-email" href="{{ url_for('users.profile') }}" {% if request.endpoint in ['users.profile', 'users.setup_profile'] or (request.endpoint == 'users.user' and session.get('username') == user.username) %}aria-current="page"{% endif %} title="{{ session.get('email', '') }}">My profile</a>
+        <a class="button button-maize" href="{{ url_for('users.profile') }}" {% if request.endpoint in ['users.profile', 'users.setup_profile'] or (request.endpoint == 'users.user' and session.get('username') == user.username) %}aria-current="page"{% endif %}>My profile</a>
         <form class="logout-form" action="{{ url_for('auth.logout') }}" method="post">
-          <button class="logout-button" type="submit">Log out</button>
+          <button class="button button-secondary" type="submit">Log out</button>
         </form>
-        {% else %}
+        {% elif google_client_id %}
         <div id="g_id_onload"
             data-client_id="{{ google_client_id }}"
             data-context="signin"

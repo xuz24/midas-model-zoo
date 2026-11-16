@@ -15,7 +15,7 @@ A software entry describes one package or library, such as a Python or R package
 | `package_url` | No | URL | Registry page, such as PyPI or CRAN |
 | `install` | No | text | Install command, such as `pip install scikit-learn` |
 | `docs_url` | No | URL | Documentation site |
-| `authors` | No | list of people | Individual people, not teams |
+| `authors` | No | list of names or quoted `@username` strings | Username credits link to researcher profiles and populate their research lists. |
 | `papers` | No | list of paper ids | Papers that describe the software |
 | `models` | No | list of model ids | Models the software trains or runs |
 | `datasets` | No | list of dataset ids | Datasets the software ships with or loads |

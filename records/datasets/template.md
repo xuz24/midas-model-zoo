@@ -12,7 +12,7 @@ A dataset entry describes one dataset and links back to its stable source. Save 
 | `last_updated` | Yes | date | |
 | `task` | No | `pretraining`, `fine-tuning`, `evaluation`, `benchmark`, `other` | Filter field |
 | `size` | No | text, such as `6 GB` | Human-readable |
-| `authors` | No | list of people | Individual people, not teams |
+| `authors` | No | list of names or quoted `@username` strings | Username credits link to researcher profiles and populate their research lists. |
 | `collection_date` | No | date | When the data was collected |
 | `languages` | No | list of ISO 639-1 codes | For example, `en` |
 | `known_limitations` | No | text | Shown on the page when present |

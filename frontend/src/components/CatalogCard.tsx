@@ -4,7 +4,6 @@ import { formatDate } from '../dates';
 export function CatalogCard({ entry, kind }: { entry: CatalogEntry; kind: CatalogKind }) {
   const labels = catalogLabels[kind];
   return <article className="model-card">
-    <div className="model-card-top"><span className="category-marker" aria-hidden="true">{labels.icon}</span><span>{entry.owner}</span></div>
     <h3><a href={entry.detail_url}>{entry.title}<span aria-hidden="true">↗</span></a></h3>
     <p className="model-description">{entry.description}</p>
     <div className="model-specs"><span>{entry.category}</span><span>{entry.format}</span></div>

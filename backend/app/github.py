@@ -61,12 +61,25 @@ class _ReadmeLinks(HTMLParser):
         self.output.append(f'&#{name};')
 
 
+def _readme_attribute(tag, name, value):
+    """Keep README layout hints without allowing arbitrary styles or handlers."""
+    if name == 'align':
+        allowed = {'left', 'center', 'right', 'justify'} if tag in {'p', 'div', 'th', 'td'} else {'left', 'right', 'top', 'middle', 'bottom'}
+        return tag in {'p', 'div', 'th', 'td', 'img'} and value.lower() in allowed
+    if tag == 'img' and name in {'width', 'height'}:
+        # HTML dimensions are positive pixel counts; percentage widths are also
+        # common in READMEs. Never accept CSS expressions or other units here.
+        if re.fullmatch(r'[1-9][0-9]{0,5}', value):
+            return True
+        return name == 'width' and bool(re.fullmatch(r'(?:[1-9][0-9]?|100)%', value))
+    return name in {'a': {'href', 'title', 'id'}, 'img': {'src', 'alt', 'title'}}.get(tag, set())
+
+
 def sanitize_readme(html, path, branch):
     clean = bleach.clean(html, tags={'a', 'p', 'br', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
         'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'strong', 'em', 'del', 'img',
         'table', 'thead', 'tbody', 'tr', 'th', 'td', 'details', 'summary', 'div', 'span'},
-        attributes={'a': ['href', 'title', 'id'], 'img': ['src', 'alt', 'title'],
-                    'th': ['align'], 'td': ['align']}, protocols={'http', 'https'}, strip=True)
+        attributes=_readme_attribute, protocols={'http', 'https'}, strip=True)
     ref = quote(branch, safe='')
     parser = _ReadmeLinks(f'https://github.com/{path}/blob/{ref}/',
                           f'https://raw.githubusercontent.com/{path}/{ref}/')

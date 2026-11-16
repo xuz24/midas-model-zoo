@@ -1,0 +1,23 @@
+id: bifrost
+name: bifrost
+summary: R package for detecting evolutionary shifts in multivariate traits across phylogenetic trees. Combines penalized-likelihood models with a stepwise search and tools for visualizing and evaluating inferred shifts.
+language: r
+license: GPL-2.0-or-later
+registry: cran
+package_url: https://CRAN.R-project.org/package=bifrost
+source_url: https://github.com/jakeberv/bifrost
+docs_url: https://jakeberv.com/bifrost/
+install: install.packages("bifrost")
+authors:
+- Jacob S. Berv
+- Nathan Fox
+- Matt J. Thorstensen
+- Henry Lloyd-Laney
+- Emily M. Troyer
+- Rafael A. Rivero-Vega
+- Stephen A. Smith
+- Matt Friedman
+- David F. Fouhey
+- Brian C. Weeks
+tags: [r, phylogenetics, evolutionary-biology, trait-evolution]
+last_updated: '2026-11-14'

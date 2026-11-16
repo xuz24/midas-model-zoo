@@ -1,0 +1,43 @@
+# Fictional people for stakeholder demos. Never copy real account credentials here.
+- username: demo_maya
+  name: Maya Chen (Demo)
+  institution: University of Michigan
+  role: Professor
+  research_interests: Machine learning, Climate science, Environmental science
+  bio: Fictional demo researcher exploring how machine learning can help communities understand changing water quality in the Great Lakes. Leads the sample Great Lakes research collaboration.
+  created_at: '2026-09-01T12:00:00+00:00'
+- username: demo_jordan
+  name: Jordan Brooks (Demo)
+  institution: University of Michigan
+  role: Research Scientist
+  research_interests: Data science, Public health, Statistics
+  bio: Fictional demo researcher building reproducible environmental datasets and studying the relationship between water quality and community health.
+  created_at: '2026-09-15T12:00:00+00:00'
+- username: demo_priya
+  name: Priya Shah (Demo)
+  institution: University of Michigan
+  role: PhD Student
+  research_interests: Machine learning, Scientific computing, Climate science
+  bio: Fictional demo researcher developing forecasting models and Python tools for collaborative environmental research.
+  created_at: '2026-10-01T12:00:00+00:00'
+- username: demo_alex
+  name: Alex Rivera (Demo)
+  institution: University of Michigan
+  role: Professor
+  research_interests: Natural language processing, Education, Human-computer interaction
+  bio: Fictional demo researcher investigating how accessible language tools can help educators and students discover scientific research.
+  created_at: '2026-10-10T12:00:00+00:00'
+- username: demo_sam
+  name: Sam Okafor (Demo)
+  institution: University of Michigan
+  role: Postdoctoral Researcher
+  research_interests: Computer vision, Biomedical research, Artificial intelligence
+  bio: Fictional demo researcher studying interpretable computer vision methods for biomedical imaging and collaboration across disciplines.
+  created_at: '2026-10-20T12:00:00+00:00'
+- username: demo_taylor
+  name: Taylor Morgan (Demo)
+  institution: University of Michigan
+  role: Research Software Engineer
+  research_interests: Scientific computing, Data science, Environmental science
+  bio: Fictional demo researcher turning scientific workflows into reusable software, with an emphasis on reproducibility and clear documentation.
+  created_at: '2026-11-01T12:00:00+00:00'

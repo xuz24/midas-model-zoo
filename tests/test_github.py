@@ -35,6 +35,25 @@ class GitHubTests(unittest.TestCase):
         for value in ['Research code', 'Python', 'MIT', 'science', '<h1>Read me</h1>', '2020-01-01T00:00:00Z']:
             self.assertIn(value, html)
 
+    def test_readme_image_dimensions_and_alignment(self):
+        html = sanitize_readme(
+            '<p align="center"><a href="/"><img src="logo.png" width="120" height="80"></a></p>'
+            '<div align="RIGHT"><img src="plot.png" width="75%" align="right"></div>'
+            '<table><tr><td align="left">Caption</td></tr></table>', 'org/repo', 'main')
+        for attribute in ('align="center"', 'width="120"', 'height="80"',
+                          'align="RIGHT"', 'width="75%"', 'align="right"', 'align="left"'):
+            self.assertIn(attribute, html)
+        self.assertIn('https://raw.githubusercontent.com/org/repo/main/logo.png', html)
+
+    def test_readme_layout_does_not_allow_arbitrary_styles(self):
+        html = sanitize_readme(
+            '<div align="invalid" style="position:fixed" class="overlay">'
+            '<img src="javascript:bad()" width="calc(100vw)" height="-1" '
+            'align="center" style="width:9999px" onload="bad()"></div>'
+            '<img src="ok.png" width="101%" height="80%">', 'org/repo', 'main')
+        for attribute in ('align=', 'style=', 'class=', 'width=', 'height=', 'onload=', 'javascript:'):
+            self.assertNotIn(attribute, html)
+
     @patch('backend.app.github.requests.get')
     def test_failures_and_missing_readme(self, get):
         get.side_effect = requests.Timeout()

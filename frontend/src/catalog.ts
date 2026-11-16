@@ -25,8 +25,8 @@ export function filterCatalog(entries: CatalogEntry[], filters: CatalogFilters):
 }
 
 export const catalogLabels = {
-  models: { singular: 'Model', icon: '◇', category: 'Tasks', format: 'Frameworks', title: 'Name', details: 'View model details', empty: 'Models will appear here once researchers can upload their work.' },
-  datasets: { singular: 'Dataset', icon: '▦', category: 'Tasks', format: 'Modalities', title: 'Title', details: 'Dataset details', empty: 'Research will appear here once researchers can submit their work.' },
-  papers: { singular: 'Paper', icon: '≡', category: 'Venues', format: 'Years', title: 'Title', details: 'Paper details', empty: 'Research will appear here once researchers can submit their work.' },
-  software: { singular: 'Software', icon: '</>', category: 'Registries', format: 'Languages', title: 'Title', details: 'Software details', empty: 'Research will appear here once researchers can submit their work.' },
-} satisfies Record<CatalogKind, { singular: string; icon: string; category: string; format: string; title: string; details: string; empty: string }>;
+  models: { singular: 'Model', category: 'Tasks', format: 'Frameworks', title: 'Name', details: 'View model details', empty: 'Models will appear here once researchers can upload their work.' },
+  datasets: { singular: 'Dataset', category: 'Tasks', format: 'Modalities', title: 'Title', details: 'Dataset details', empty: 'Research will appear here once researchers can submit their work.' },
+  papers: { singular: 'Paper', category: 'Venues', format: 'Years', title: 'Title', details: 'Paper details', empty: 'Research will appear here once researchers can submit their work.' },
+  software: { singular: 'Software', category: 'Registries', format: 'Languages', title: 'Title', details: 'Software details', empty: 'Research will appear here once researchers can submit their work.' },
+} satisfies Record<CatalogKind, { singular: string; category: string; format: string; title: string; details: string; empty: string }>;

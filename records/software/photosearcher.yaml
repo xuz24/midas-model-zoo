@@ -1,0 +1,19 @@
+id: photosearcher
+name: photosearcher
+summary: R package for searching Flickr and collecting photographs and their spatial and temporal metadata for environmental and social research.
+language: r
+license: GPL-3.0-only
+source_url: https://github.com/ropensci/photosearcher
+docs_url: https://docs.ropensci.org/photosearcher/
+authors:
+- Nathan Fox
+- Francesca Mancini
+- Laura Graham
+- Louis Sutter
+- Tom August
+papers:
+- https://doi.org/10.1016/j.softx.2020.100624
+status: Archived
+usage_notes: The repository has moved to ropensci-archive/photosearcher and is read-only. The original documentation URL is retained but returned HTTP 404 when reviewed.
+tags: [r, flickr, social-media, geospatial, environmental-research]
+last_updated: '2026-11-14'

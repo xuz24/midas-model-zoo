@@ -1,0 +1,12 @@
+{% macro filter_links(group, selected, total, make_url) -%}
+<div class="catalog-filter-group" role="group" aria-label="Filter by {{ group.label | lower }}">
+  <h3>{{ group.label }}</h3>
+  <div class="catalog-filter-tags">
+    <a href="{{ make_url(**{group.key: ''}) }}" {% if not selected %}aria-current="true"{% endif %}>All <span>{{ total }}</span></a>
+    {% for option in group.options %}
+    {% set active = option.value | lower == selected | lower %}
+    <a href="{{ make_url(**{group.key: '' if active else option.value}) }}" {% if active %}aria-current="true"{% endif %}>{{ option.value }} <span>{{ option.count }}</span></a>
+    {% endfor %}
+  </div>
+</div>
+{%- endmacro %}

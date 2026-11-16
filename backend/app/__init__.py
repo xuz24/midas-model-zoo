@@ -1,5 +1,6 @@
 import os
 import json
+import secrets
 from pathlib import Path
 
 from flask import Flask, abort, redirect, render_template, url_for
@@ -23,8 +24,8 @@ app = Flask(
     static_folder=str(frontend / "static"),
 )
 
-app.config["SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]
-app.config["GOOGLE_CLIENT_ID"] = os.environ["GOOGLE_CLIENT_ID"]
+app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY") or secrets.token_hex(32)
+app.config["GOOGLE_CLIENT_ID"] = os.environ.get("GOOGLE_CLIENT_ID", "")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
     "DATABASE_URL",
     "sqlite:///research.db"
@@ -35,6 +36,9 @@ migrate.init_app(app, db)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(users_bp)
+
+from .demo import prepare_demo
+app.cli.add_command(prepare_demo)
 
 
 @app.context_processor
@@ -96,6 +100,7 @@ def record_detail(kind, record_id):
             for value in (record.get(key) if isinstance(record.get(key), list) else [record.get(key)])
             if value]
     return render_template("record.html", title=record.get('title', record.get('name')),
+                           author_values=next((field['values'] for field in fields if field['key'] == 'authors'), []),
                            kind=kind, record=record, tags=tags, repository=repository, github_path=github_path,
                            detail_fields=[field for field in fields if field['key'] not in resource_keys | related_keys | {'last_updated', 'tags', 'description', 'known_limitations'}],
                            resource_fields=[field for field in fields if field['key'] in resource_keys],

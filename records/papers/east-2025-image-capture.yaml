@@ -1,0 +1,37 @@
+id: east-2025-image-capture
+title: Optimizing image capture for computer vision-powered taxonomic identification and trait recognition of biodiversity specimens
+authors:
+- Alyson East
+- Elizabeth G. Campolongo
+- Luke Meyers
+- S. M. Rayeed
+- Samuel Stevens
+- Iuliia Zarubiieva
+- Isadora E. Fluck
+- Jennifer C. Girón
+- Maximiliane Jousse
+- Scott Lowe
+- Kayla I. Perry
+- Isabelle Betancourt
+- Noah Charney
+- Evan Donoso
+- Nathan Fox
+- Kim J. Landsbergen
+- Ekaterina Nepovinnykh
+- Michelle Ramirez
+- Parkash Singh
+- Khum Thapa-Magar
+- Matthew Thompson
+- Evan Waite
+- Tanya Berger-Wolf
+- Hilmar Lapp
+- Paula Mabee
+- Charles Stewart
+- Graham Taylor
+- Sydne Record
+year: 2025
+venue: Methods in Ecology and Evolution
+doi: 10.1111/2041-210X.70140
+summary: Reviews how biological specimens should be photographed for automated species identification and trait analysis. Provides practical imaging recommendations and checklists that address image quality, model generalization, and data leakage.
+tags: [artificial-intelligence, computer-vision, biodiversity, taxonomic-identification, specimen-imaging]
+last_updated: '2026-11-14'

@@ -1,0 +1,19 @@
+id: viewscape
+name: viewscape
+summary: R package for computing viewsheds and visual landscape metrics from elevation or surface models. Supports analysis of landscape perception and the composition and configuration of visible areas.
+language: r
+license: GPL-3.0-only
+registry: cran
+package_url: https://CRAN.R-project.org/package=viewscape
+source_url: https://github.com/billbillbilly/viewscape
+previous_repository_url: https://github.com/land-info-lab/viewscape
+install: install.packages("viewscape")
+authors:
+- Xiaohao Yang
+- Nathan Fox
+- Derek Van Berkel
+- Mark Lindquist
+papers:
+- https://doi.org/10.1016/j.softx.2024.101662
+tags: [r, geospatial, viewshed, landscape-perception, environmental-planning]
+last_updated: '2026-11-14'

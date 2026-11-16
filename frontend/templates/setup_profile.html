@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_profile.html" import avatar %}
+{% from "_profile.html" import avatar, account_email %}
 {% macro field(name, label, placeholder='', limit=255, autocomplete='off') %}
 <div class="profile-field">
   <label for="profile-{{ name }}">{{ label }} {% if name not in ['name', 'username'] %}<span>(optional)</span>{% else %}<span>(required)</span>{% endif %}</label>
@@ -13,7 +13,7 @@
     {{ avatar(user) }}
     <h2>A little about you.</h2>
     <p>Your research starts with your perspective. Add your background, interests, and a short introduction.</p>
-    <div class="profile-account"><span class="eyebrow">CONNECTED ACCOUNT</span><p>{{ user.email or 'Google account' }}</p><span>Signed in with Google</span></div>
+    {{ account_email(user, 'Google account') }}
     <p class="profile-hint">Your name and a unique username are required. You can come back and edit these details anytime.</p>
   </aside>
   <form class="submission-fields profile-card" action="{{ url_for('users.setup_profile', edit='1') if editing else url_for('users.setup_profile') }}" method="post">
