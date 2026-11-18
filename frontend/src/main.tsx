@@ -58,6 +58,33 @@ if (interestPicker && interestData) {
   createRoot(interestPicker).render(<ResearchInterestPicker options={data.options} initial={data.selected} />);
 }
 
+const additionalLinks = document.getElementById('additional-profile-links');
+const addLink = document.getElementById('add-profile-link');
+const linkTemplate = document.querySelector<HTMLTemplateElement>('#additional-profile-link-template');
+if (additionalLinks && addLink && linkTemplate) {
+  const status = document.getElementById('profile-link-status');
+  const enableRemove = () => {
+    additionalLinks.querySelectorAll<HTMLButtonElement>('[data-remove-link]').forEach(button => {
+      button.hidden = false;
+    });
+  };
+  enableRemove();
+  addLink.hidden = false;
+  addLink.addEventListener('click', () => {
+    additionalLinks.append(linkTemplate.content.cloneNode(true));
+    enableRemove();
+    additionalLinks.lastElementChild?.querySelector('input')?.focus();
+    if (status) status.textContent = 'Link added.';
+  });
+  additionalLinks.addEventListener('click', event => {
+    const button = (event.target as HTMLElement).closest('[data-remove-link]');
+    if (!button) return;
+    button.closest('[data-additional-link]')?.remove();
+    addLink.focus();
+    if (status) status.textContent = 'Link removed.';
+  });
+}
+
 // Keep initials visible until the remote image has loaded successfully.
 document.querySelectorAll<HTMLImageElement>('[data-profile-picture]').forEach(picture => {
   const showPicture = () => picture.classList.toggle('is-loaded', picture.naturalWidth > 0);

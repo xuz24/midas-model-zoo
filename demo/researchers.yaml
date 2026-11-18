@@ -1,10 +1,21 @@
 # Fictional people for stakeholder demos. Never copy real account credentials here.
+# Links use example.org placeholders, not real researcher accounts.
 - username: demo_maya
   name: Maya Chen (Demo)
   institution: University of Michigan
   role: Professor
   research_interests: Machine learning, Climate science, Environmental science
   bio: Fictional demo researcher exploring how machine learning can help communities understand changing water quality in the Great Lakes. Leads the sample Great Lakes research collaboration.
+  github_url: https://example.org/demo/maya/github
+  google_scholar_url: https://example.org/demo/maya/scholar
+  researchgate_url: https://example.org/demo/maya/researchgate
+  orcid_url: https://example.org/demo/maya/orcid
+  website_url: https://example.org/demo/maya/portfolio
+  additional_links:
+    - label: Demo lab
+      url: https://example.org/demo/maya/lab
+    - label: Demo blog
+      url: https://example.org/demo/maya/blog
   created_at: '2026-09-01T12:00:00+00:00'
 - username: demo_jordan
   name: Jordan Brooks (Demo)
@@ -12,6 +23,16 @@
   role: Research Scientist
   research_interests: Data science, Public health, Statistics
   bio: Fictional demo researcher building reproducible environmental datasets and studying the relationship between water quality and community health.
+  github_url: https://example.org/demo/jordan/github
+  google_scholar_url: https://example.org/demo/jordan/scholar
+  researchgate_url: https://example.org/demo/jordan/researchgate
+  orcid_url: https://example.org/demo/jordan/orcid
+  website_url: https://example.org/demo/jordan/portfolio
+  additional_links:
+    - label: Demo lab
+      url: https://example.org/demo/jordan/lab
+    - label: Demo blog
+      url: https://example.org/demo/jordan/blog
   created_at: '2026-09-15T12:00:00+00:00'
 - username: demo_priya
   name: Priya Shah (Demo)
@@ -19,6 +40,16 @@
   role: PhD Student
   research_interests: Machine learning, Scientific computing, Climate science
   bio: Fictional demo researcher developing forecasting models and Python tools for collaborative environmental research.
+  github_url: https://example.org/demo/priya/github
+  google_scholar_url: https://example.org/demo/priya/scholar
+  researchgate_url: https://example.org/demo/priya/researchgate
+  orcid_url: https://example.org/demo/priya/orcid
+  website_url: https://example.org/demo/priya/portfolio
+  additional_links:
+    - label: Demo lab
+      url: https://example.org/demo/priya/lab
+    - label: Demo blog
+      url: https://example.org/demo/priya/blog
   created_at: '2026-10-01T12:00:00+00:00'
 - username: demo_alex
   name: Alex Rivera (Demo)
@@ -26,6 +57,16 @@
   role: Professor
   research_interests: Natural language processing, Education, Human-computer interaction
   bio: Fictional demo researcher investigating how accessible language tools can help educators and students discover scientific research.
+  github_url: https://example.org/demo/alex/github
+  google_scholar_url: https://example.org/demo/alex/scholar
+  researchgate_url: https://example.org/demo/alex/researchgate
+  orcid_url: https://example.org/demo/alex/orcid
+  website_url: https://example.org/demo/alex/portfolio
+  additional_links:
+    - label: Demo lab
+      url: https://example.org/demo/alex/lab
+    - label: Demo blog
+      url: https://example.org/demo/alex/blog
   created_at: '2026-10-10T12:00:00+00:00'
 - username: demo_sam
   name: Sam Okafor (Demo)
@@ -33,6 +74,16 @@
   role: Postdoctoral Researcher
   research_interests: Computer vision, Biomedical research, Artificial intelligence
   bio: Fictional demo researcher studying interpretable computer vision methods for biomedical imaging and collaboration across disciplines.
+  github_url: https://example.org/demo/sam/github
+  google_scholar_url: https://example.org/demo/sam/scholar
+  researchgate_url: https://example.org/demo/sam/researchgate
+  orcid_url: https://example.org/demo/sam/orcid
+  website_url: https://example.org/demo/sam/portfolio
+  additional_links:
+    - label: Demo lab
+      url: https://example.org/demo/sam/lab
+    - label: Demo blog
+      url: https://example.org/demo/sam/blog
   created_at: '2026-10-20T12:00:00+00:00'
 - username: demo_taylor
   name: Taylor Morgan (Demo)
@@ -40,4 +91,14 @@
   role: Research Software Engineer
   research_interests: Scientific computing, Data science, Environmental science
   bio: Fictional demo researcher turning scientific workflows into reusable software, with an emphasis on reproducibility and clear documentation.
+  github_url: https://example.org/demo/taylor/github
+  google_scholar_url: https://example.org/demo/taylor/scholar
+  researchgate_url: https://example.org/demo/taylor/researchgate
+  orcid_url: https://example.org/demo/taylor/orcid
+  website_url: https://example.org/demo/taylor/portfolio
+  additional_links:
+    - label: Demo lab
+      url: https://example.org/demo/taylor/lab
+    - label: Demo blog
+      url: https://example.org/demo/taylor/blog
   created_at: '2026-11-01T12:00:00+00:00'

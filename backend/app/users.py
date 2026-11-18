@@ -1,5 +1,6 @@
 import re
 from math import ceil
+from itertools import zip_longest
 from sqlalchemy import func, or_
 
 from flask import Blueprint, request, abort, session, redirect, url_for, render_template, flash
@@ -9,6 +10,7 @@ from .auth import sign_in_user
 from .database import db
 from .db_models import User
 from .profile_options import UNIVERSITY_AFFILIATIONS, RESEARCH_INTERESTS
+from .profile_links import PROFILE_LINK_FIELDS, normalize_profile_link
 from .records import researcher_records
 
 users_bp = Blueprint("users", __name__)
@@ -114,12 +116,35 @@ def setup_profile():
             sign_in_user(existing)
             return redirect(url_for("users.profile"))
     fields = {name: getattr(user, name) or "" for name in
-              ("username", "name", "institution", "role", "research_interests", "bio")}
+              ("username", "name", "institution", "role", "research_interests", "bio",
+               *(field for field, _, _ in PROFILE_LINK_FIELDS))}
     selected_interests = user.interest_list
+    additional_links = user.additional_link_list
     errors = {}
 
     if request.method == "POST":
         fields = {name: request.form.get(name, "").strip() for name in fields}
+        additional_links = []
+        for label, url in zip_longest(request.form.getlist("additional_link_label"),
+                                      request.form.getlist("additional_link_url"), fillvalue=""):
+            label, url = label.strip(), url.strip()
+            if not label and not url:
+                continue
+            normalized = normalize_profile_link(url, "other_url")
+            if not normalized:
+                errors["additional_links"] = "Enter a valid http:// or https:// URL for each additional link, up to 2,048 characters."
+            if len(label) > 80 or re.search(r"[\x00-\x1f\x7f]", label):
+                errors["additional_links"] = "Use labels up to 80 characters, without control characters."
+            additional_links.append({"label": label, "url": normalized or url})
+        for field, _, _ in PROFILE_LINK_FIELDS:
+            if fields[field]:
+                normalized = normalize_profile_link(fields[field], field)
+                if normalized:
+                    fields[field] = normalized
+                else:
+                    errors[field] = "Enter a valid http:// or https:// URL, up to 2,048 characters."
+                    if field == "orcid_url":
+                        errors[field] += " You can also enter an ORCID iD (0000-0000-0000-000X)."
         submitted = request.form.getlist("research_interests")
         custom_interest = request.form.get("custom_interest", "").strip()
         if custom_interest:
@@ -154,6 +179,8 @@ def setup_profile():
         if not errors:
             for name, value in fields.items():
                 setattr(user, name, value)
+            user.additional_links = additional_links
+            user.other_url = ""
             db.session.add(user)
             try:
                 db.session.commit()
@@ -166,6 +193,8 @@ def setup_profile():
                 return redirect(url_for("users.profile"))
 
     return render_template("setup_profile.html", user=user, fields=fields, errors=errors,
+                           profile_link_fields=PROFILE_LINK_FIELDS,
+                           additional_links=additional_links,
                            editing=request.args.get("edit") == "1",
                            university_affiliations=UNIVERSITY_AFFILIATIONS,
                            research_interest_options=RESEARCH_INTERESTS,

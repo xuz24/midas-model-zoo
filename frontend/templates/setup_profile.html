@@ -2,9 +2,16 @@
 {% from "_profile.html" import avatar, account_email %}
 {% macro field(name, label, placeholder='', limit=255, autocomplete='off') %}
 <div class="profile-field">
-  <label for="profile-{{ name }}">{{ label }} {% if name not in ['name', 'username'] %}<span>(optional)</span>{% else %}<span>(required)</span>{% endif %}</label>
+  <label for="profile-{{ name }}">{{ label }}{% if name in ['name', 'username'] %} <span class="profile-required" aria-hidden="true">*</span>{% endif %}</label>
   <input id="profile-{{ name }}" name="{{ name }}" value="{{ fields[name] }}" placeholder="{{ placeholder }}" maxlength="{{ limit }}" autocomplete="{{ autocomplete }}" {% if name in ['name', 'username'] %}required{% endif %} {% if errors.get(name) %}aria-invalid="true" aria-describedby="{{ name }}-error"{% elif name == 'username' %}aria-describedby="username-help"{% elif name == 'research_interests' %}aria-describedby="interests-help"{% endif %}>
   {% if errors.get(name) %}<p class="profile-error" id="{{ name }}-error">{{ errors[name] }}</p>{% endif %}
+</div>
+{% endmacro %}
+{% macro additional_link_row(link={}) %}
+<div class="profile-additional-link" data-additional-link>
+    <label>Link label<input name="additional_link_label" value="{{ link.get('label', '') }}" maxlength="80" placeholder="e.g. Lab page"></label>
+    <label>Link URL<input type="url" name="additional_link_url" value="{{ link.get('url', '') }}" maxlength="2048" placeholder="https://…" {% if errors.get('additional_links') %}aria-describedby="additional-links-error"{% endif %}></label>
+  <button class="button button-secondary" type="button" data-remove-link aria-label="Remove link" title="Remove link" hidden>×</button>
 </div>
 {% endmacro %}
 {% block content %}
@@ -25,7 +32,7 @@
       {{ field('name', 'Full name', 'How should we call you?', autocomplete='name') }}
       <div class="submission-grid">
         <div class="profile-field">
-          <label for="profile-institution">University affiliation <span>(optional)</span></label>
+          <label for="profile-institution">University affiliation</label>
           <select id="profile-institution" name="institution" autocomplete="organization" {% if errors.get('institution') %}aria-invalid="true" aria-describedby="institution-error"{% endif %}>
             <option value="">Select your university</option>
             {% for university in university_affiliations %}<option value="{{ university }}" {% if fields.institution == university %}selected{% endif %}>{{ university }}</option>{% endfor %}
@@ -39,7 +46,7 @@
     <fieldset>
       <legend><span class="submission-step">02</span> Your research, in your words</legend>
       <div class="profile-interest-picker" role="group" aria-labelledby="interests-label" aria-describedby="interests-help{% if errors.get('research_interests') %} research_interests-error{% endif %}">
-        <p id="interests-label" class="profile-interest-label">Research interests <span>(optional)</span></p>
+        <p id="interests-label" class="profile-interest-label">Research interests</p>
         <p class="submission-help" id="interests-help">Search and select topics, or type a new topic and choose Other to add it. Select up to 20 interests.</p>
         <script id="research-interest-data" type="application/json">{{ {'options': research_interest_options, 'selected': selected_interests} | tojson }}</script>
         <div id="research-interest-picker">
@@ -48,15 +55,35 @@
           <label class="profile-interest-option"><input type="checkbox" name="research_interests" value="{{ interest }}" {% if interest in selected_interests %}checked{% endif %}><span>{{ interest }}</span></label>
           {% endfor %}
         </div>
-        <label for="custom-interest">Other interest <span>(optional)</span></label>
+        <label for="custom-interest">Other interest</label>
         <input id="custom-interest" name="custom_interest" maxlength="80" placeholder="Add a topic not listed above">
         </div>
         {% if errors.get('research_interests') %}<p class="profile-error" id="research_interests-error">{{ errors.research_interests }}</p>{% endif %}
       </div>
-      <label for="profile-bio">About you <span>(optional)</span></label>
+      <label for="profile-bio">About you</label>
       <textarea id="profile-bio" name="bio" rows="6" maxlength="2000" placeholder="What are you working on? What questions drive your research?" aria-describedby="bio-help{% if errors.get('bio') %} bio-error{% endif %}" {% if errors.get('bio') %}aria-invalid="true"{% endif %}>{{ fields.bio }}</textarea>
       <p class="submission-help" id="bio-help">A short introduction, up to 2,000 characters.</p>
       {% if errors.get('bio') %}<p class="profile-error" id="bio-error">{{ errors.bio }}</p>{% endif %}
+    </fieldset>
+    <fieldset id="profile-links">
+      <legend><span class="submission-step">03</span> Social &amp; links</legend>
+      <p class="submission-help">Share where people can find your work. These optional links appear on your public profile. Use full http:// or https:// URLs, or an ORCID iD.</p>
+      <div class="submission-grid">
+        {% for name, label, placeholder in profile_link_fields %}
+          {{ field(name, label, placeholder, limit=2048) }}
+        {% endfor %}
+      </div>
+      <div class="profile-additional-links">
+        <h3>More links</h3>
+        <p class="submission-help">Add other places people can find you or your work. Leave unused rows blank.</p>
+        {% if errors.get('additional_links') %}<p class="profile-error" id="additional-links-error">{{ errors.additional_links }}</p>{% endif %}
+        <div id="additional-profile-links">
+          {% for link in additional_links %}{{ additional_link_row(link) }}{% else %}{{ additional_link_row() }}{% endfor %}
+        </div>
+        <template id="additional-profile-link-template">{{ additional_link_row() }}</template>
+        <button class="button button-secondary" id="add-profile-link" type="button" hidden>Add another link</button>
+        <span class="sr-only" id="profile-link-status" role="status"></span>
+      </div>
     </fieldset>
     <div class="submission-actions">
       <button class="button button-primary" type="submit">Save profile <span aria-hidden="true">→</span></button>

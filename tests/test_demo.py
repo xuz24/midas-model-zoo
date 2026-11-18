@@ -32,6 +32,14 @@ class DemoTests(unittest.TestCase):
             self.assertEqual(priya.google_sub, 'demo:demo_priya')
             self.assertIsNone(priya.email)
             self.assertEqual(priya.created_at.year, 2026)
+            self.assertEqual(len(priya.profile_links), 7)
+            priya.website_url = 'https://example.org/custom'
+            session.commit()
+            seed_researchers(session)
+            self.assertEqual(priya.website_url, 'https://example.org/custom')
+            seed_researchers(session, refresh_links=True)
+            self.assertEqual(priya.website_url, 'https://example.org/demo/priya/portfolio')
+            self.assertIsNone(session.get(User, 'demo_maya').github_url)
 
     def test_fresh_checkout_migrates_without_env_or_google_credentials(self):
         root = Path(__file__).resolve().parents[1]
@@ -59,6 +67,10 @@ class DemoTests(unittest.TestCase):
             html = client.get('/users?sort=joined').get_data(as_text=True)
             self.assertLess(html.index('href="/user/demo_taylor"'), html.index('href="/user/demo_maya"'))
             html = client.get('/user/demo_priya').get_data(as_text=True)
+            self.assertIn('href="https://example.org/demo/priya/github"', html)
+            self.assertIn('profile-platform-icon', html)
+            self.assertIn('Demo lab', html)
+            self.assertIn('Demo blog', html)
             for kind in KINDS:
                 self.assertIn(f'href="/{kind}/demo-', html)
             self.assertNotIn('Edit profile', html)

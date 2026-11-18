@@ -5,6 +5,7 @@ __pycache__/
 node_modules/
 frontend/static/dist/
 .env
+.env_demo
 .skua
 
 instance/
